@@ -1,0 +1,11 @@
+.banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $color_primary;
+    height: 100px;
+    opacity: 80%;
+    &_logo {
+        height: 15rem;
+    }
+}
