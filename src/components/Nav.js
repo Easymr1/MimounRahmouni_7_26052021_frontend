@@ -1,12 +1,8 @@
-import logo from '../assets/icon-left-font-monochrome-white.png';
 import {Link} from 'react-router-dom';
 
-
-const Banner = () => {
+const Nav = () => {
     return (
-        <header className='banner'>
-            <img className="banner_logo" src={logo} alt='Logo groupomania'/>
-            <nav>
+        <nav>
             <ul>
                 <Link to='/login'>
                 <li>Login</li>
@@ -17,9 +13,7 @@ const Banner = () => {
                 </Link>
             </ul>
         </nav>
-            
-        </header>
     )
 }
 
-export default Banner
+export default Nav;
