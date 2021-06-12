@@ -1,36 +1,52 @@
-import { useState, useEffect } from "react";
+import React from 'react';
+import axios from 'axios';
 
-function Login() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [stop, loading] = useState(false)
-    console.log(email)
-    
-      useEffect(async () => {
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email, password: password})
-      };
-      fetch('http://localhost:3001/api/employes/login', requestOptions)
-          .then(response => response.json())
-          .then(data => console.log(data));
-          },[stop])
-      return (
-        <div>
-          <form>
-      <label>
-        email:
-        <input type="text" name="email" value={email}
-                    onChange={(e) => setEmail(e.target.value)}/>
-        password:
-        <input type="text" name="password" value={password}
-                    onChange={(e) => setPassword(e.target.value)}/>
-      </label>
-    </form>
-      <button onClick ={() => stop === true ? loading(false) : loading(true)}>New Joke</button>
-        </div>
-      );
-    }
 
-    export default Login;
+export default class PersonList extends React.Component {
+  state = {
+    email: '',
+    password: '',
+  }
+
+  handleChange = event => {
+    this.setState({ email: event.target.value });
+  }
+  handlePasswordChange = event => {
+      this.setState({ password: event.target.value })
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+
+    const login = {
+      email: this.state.email,
+      password: this.state.password
+    };
+
+
+    axios.post(`http://localhost:3001/api/employes/login`,  login )
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+      })
+  }
+
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Email:
+            <input type="text" name="email" onChange={this.handleChange} />
+          </label>
+          <label>
+            Password:
+            <input type="text" name="password" onChange={this.handlePasswordChange} />
+          </label>
+          <button type="submit">Add</button>
+        </form>
+      </div>
+    )
+  }
+}
+   
