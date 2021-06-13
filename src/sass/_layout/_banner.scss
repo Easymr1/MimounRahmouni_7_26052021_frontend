@@ -1,11 +1,30 @@
 .banner {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     background-color: $color_primary;
-    height: 100px;
+    height: 85px;
+    width: 100%;
     opacity: 80%;
+    
     &_logo {
         height: 15rem;
+        margin-left: 2rem;
     }
+    &_nav {
+        text-decoration: none;
+        display: flex;
+        justify-content: space-around;
+        width: 200px;
+        &-li{
+            list-style: none;
+            color: white;
+           
+        }
+    }
+}
+
+body{
+   display: flex;
+   width: 100%;
 }

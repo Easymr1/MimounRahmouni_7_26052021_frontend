@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 
 
-export default class PersonList extends React.Component {
+export default class Login extends React.Component {
   state = {
     email: '',
     password: '',
@@ -36,14 +36,14 @@ export default class PersonList extends React.Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <label>
-            Email:
+            Courriel:
             <input type="text" name="email" onChange={this.handleChange} />
           </label>
           <label>
-            Password:
+            Mot de passe:
             <input type="text" name="password" onChange={this.handlePasswordChange} />
           </label>
-          <button type="submit">Add</button>
+          <button type="submit">Connexion</button>
         </form>
       </div>
     )

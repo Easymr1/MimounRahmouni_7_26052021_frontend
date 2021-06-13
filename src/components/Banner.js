@@ -7,13 +7,13 @@ const Banner = () => {
         <header className='banner'>
             <img className="banner_logo" src={logo} alt='Logo groupomania'/>
             <nav>
-            <ul>
+            <ul className='banner_nav'>
                 <Link to='/login'>
-                <li>Login</li>
+                <li className='banner_nav-li'>Connexion</li>
                 </Link>
                 
                 <Link to='/signup'>
-                <li>Signup</li>
+                <li className='banner_nav-li'>Inscription</li>
                 </Link>
             </ul>
         </nav>
