@@ -12,6 +12,7 @@
   height: 85px;
   width: 100%;
   opacity: 80%;
+  margin-bottom: 100px;
 }
 
 .banner_logo {
@@ -32,12 +33,5 @@
 .banner_nav-li {
   list-style: none;
   color: white;
-}
-
-body {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
 }
 /*# sourceMappingURL=app.css.map */

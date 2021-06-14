@@ -1,5 +1,5 @@
 import Banner from './Banner';
-import Nav from './Nav';
+import Home from './Home';
 import Login from './Login';
 import Signup from './Signup';
 import '../sass/app.css'
@@ -11,10 +11,10 @@ return (
     
     <Router>
       <Banner />
-      <Nav />
       <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />  
+        <Route path="/signup" component={Signup} />
+        <Route path="/" component={Home} />
       </Switch>
   
     </Router>

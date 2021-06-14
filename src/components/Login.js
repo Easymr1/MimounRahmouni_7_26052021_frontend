@@ -27,7 +27,7 @@ export default class Login extends React.Component {
     axios.post(`http://localhost:3001/api/employes/login`,  login )
       .then(res => {
         console.log(res);
-        console.log(res.data);
+        console.log(localStorage.setItem('token', JSON.stringify(res.data.token)));
       })
   }
 
