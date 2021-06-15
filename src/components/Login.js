@@ -1,52 +1,39 @@
-import React from 'react';
-import axios from 'axios';
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import {useState, useEffect} from 'react';
+
+function Login () {
+  const {register, handleSubmit} = useForm();
+
+  const [refresh, setRefresh] = useState(false)
+    useEffect(() => {
+        setRefresh(false)
+    }, [refresh])
 
 
-export default class Login extends React.Component {
-  state = {
-    email: '',
-    password: '',
-  }
-
-  handleChange = event => {
-    this.setState({ email: event.target.value });
-  }
-  handlePasswordChange = event => {
-      this.setState({ password: event.target.value })
-  }
-
-  handleSubmit = event => {
-    event.preventDefault();
-
-    const login = {
-      email: this.state.email,
-      password: this.state.password
-    };
-
-
-    axios.post(`http://localhost:3001/api/employes/login`,  login )
-      .then(res => {
-        console.log(res);
-        console.log(localStorage.setItem('token', JSON.stringify(res.data.token)));
-      })
-  }
-
-  render() {
-    return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Courriel:
-            <input type="text" name="email" onChange={this.handleChange} />
-          </label>
-          <label>
-            Mot de passe:
-            <input type="text" name="password" onChange={this.handlePasswordChange} />
-          </label>
-          <button type="submit">Connexion</button>
-        </form>
-      </div>
-    )
-  }
+  function onSubmit (publier) {
+    console.log(publier)
+    axios.post('http://localhost:3001/api/employes/login', publier)
+    .then(res => {
+      console.log(res.data.token)
+      localStorage.setItem('token', res.data.token)
+    })
+    .catch(err => console.log(err));
 }
-   
+
+    return (
+        <div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+          <label>
+          Courriel:
+            <input type="email" {...register("email")} />
+          Mot de passe:
+            <input type="password" {...register("password")} />
+          </label>
+          <button type="submit" value="Envoyer" onClick={() => setRefresh(true)}>Envoyée</button>
+          </form>
+        </div>
+    )
+}
+
+export default Login;

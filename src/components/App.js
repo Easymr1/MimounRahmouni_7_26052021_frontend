@@ -6,7 +6,8 @@ import '../sass/app.css'
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 function App() {
-return (
+  if (!localStorage.getItem('token')) {
+    return (
   <div>
     
     <Router>
@@ -21,6 +22,22 @@ return (
     
   </div>
 )
+  } else {
+    return (
+      <div>
+        
+        <Router>
+          <Banner />
+          <Switch>
+            <Route path="/" component={Home} />
+          </Switch>
+      
+        </Router>
+        
+      </div>
+    )
+  }
+
   
   
 }

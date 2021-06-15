@@ -1,43 +1,29 @@
-import React from 'react';
+import {useState, useEffect} from 'react';
+import Publier from './Publier';
 import axios from 'axios';
-import Publier from './Publier'
 
-export default class Home extends React.Component {
-    state = {
-      publications: []
-    }
-  
-    componentDidMount() {
-      axios.get(`http://localhost:3001/api/publication/`)
-        .then(res => {
-          const publications =res.data.results;
-          console.log(publications)
-          this.setState( {publications} );
-        })
-    }
-  
-    render() {
-      return (
-        <div>
+
+ const Home = () => {
+    const [getPublication, setGetPublication] = useState([])
+    const [refresh, setRefresh] = useState(false)
+    console.log(refresh)
+    useEffect(() => {
+        axios.get('http://localhost:3001/api/publication/')
+        .then(res => setGetPublication(res.data.results), setRefresh(false))
+        .catch(err => console.error(err))
+    }, [refresh])
+    return (
+        <section className='section'>
             <Publier />
-
-        <h3>Écrire une publication</h3>
-        <section>
-          { this.state.publications.map(publication => 
-          <article> 
-                <h2>{publication.titre}</h2>
+            <button onClick={() => setRefresh(true)}>Actualiser</button>
+            {getPublication.map(publication =>
+                <article key={publication.id}>
+                <h3>{publication.titre}</h3>
                 <p>{publication.texte}</p>
-          </article>
-             
-          
-          
-          
-        
-          
-          )}
+            </article>
+                )}
         </section>
-        
-        </div>
-      )
-    }
-  }
+    )
+}
+
+export default Home

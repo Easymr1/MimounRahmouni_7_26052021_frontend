@@ -1,19 +1,22 @@
 import { useForm } from "react-hook-form";
+import {useState, useEffect} from 'react';
+import axios from "axios";
 
 const Publier = () => {
     const {register, handleSubmit} = useForm();
+    const [inputSend, setInputSend] = useState(false)
     
-      function onSubmit (publier) {
-          console.log(publier);
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(publier)
-      };
-      fetch('http://localhost:3001/api/publication/', requestOptions)
-          .then(response => response.json())
-          .then(data => console.log(data));
-          }
+    useEffect(() => {
+                setInputSend(false)
+          }, [inputSend])
+    console.log(inputSend)
+
+    function onSubmit (publier) {
+            axios.post('http://localhost:3001/api/publication/', publier)
+            .then(response => console.log(response))
+            .catch();
+        }
+      
       return (
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -22,11 +25,11 @@ const Publier = () => {
         <input type="text" {...register("titre")} />
         Texte:
         <input type="text" {...register("texte")} />
-        Id:
+        ID:
         <input type="number" {...register("employesID")} />
         
       </label>
-      <input type="submit" value="Envoyer"/>
+      <button type="submit" value="Envoyer" onClick={() => setInputSend(true)}>Envoyée</button>
     </form>
         </div>
     )

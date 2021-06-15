@@ -1,13 +1,13 @@
 import logo from '../assets/icon-left-font-monochrome-white.png';
 import {Link} from 'react-router-dom';
-import {useEffect} from 'react';
-
-
+import {useState, useEffect} from 'react';
 
 
 const Banner = () => {
-
-    
+    const [refresh, setRefresh] = useState(false)
+    useEffect(() => {
+        setRefresh(false)
+    }, [refresh])
 
     let statutLog; 
 
@@ -15,7 +15,7 @@ const Banner = () => {
         statutLog = (
             <ul className='banner_nav'>
                 <Link to='/login'>
-                <li className='banner_nav-li' onClick={() => localStorage.clear()}>Déconnection</li>
+                <li className='banner_nav-li' onClick={() => {localStorage.clear(); setRefresh(true);}}>Déconnection</li>
                 </Link>
             </ul>
 )
