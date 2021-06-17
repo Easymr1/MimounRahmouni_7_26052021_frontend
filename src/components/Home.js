@@ -10,7 +10,7 @@ import Commentaire from './Commentaire'
     const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
-        axios.get('http://localhost:3001/api/publication/')
+        axios.get('http://localhost:3001/api/publication')
         .then(res => setGetPublication(res.data.results), setRefresh(false))
         .catch(err => console.error(err))
     }, [refresh])
@@ -21,7 +21,8 @@ import Commentaire from './Commentaire'
             <button onClick={() => setRefresh(true)}>Actualiser</button>
             {getPublication.map(publication =>
                 <article className='publication' key={publication.id}>
-                <h3>{publication.titre}</h3>
+                <p>{publication.firstname} {publication.lastname}</p>
+                <h2>{publication.titre}</h2>
                 <p>{publication.texte}</p>
                 
                 <Commentaire id={publication.id}/>

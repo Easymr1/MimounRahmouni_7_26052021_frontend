@@ -12,16 +12,23 @@ const Commentaire = ({id}) => {
         employeID: 18,
         publicationID: id,
     }
-    const handleClick = () => {
+    
+    const HandleClick = () => {
         setInputSend(object);
     }
-    console.log(inputSend)
+
+    
     useEffect(() => {
-            axios.post('http://localhost:3001/api/commentaire/', inputSend)
-            .then(response => console.log(response))
-            .catch();
+        axios.post('http://localhost:3001/api/commentaire', inputSend)
+         .then(response => {
+             console.log(response);
+              setInputSend({});
+               setCommentaire('')})
+         .catch(err => console.error(err));
     }, [inputSend])
-            
+
+
+    
       return (
           <div>
               <Commentaires id={id} inputSend={inputSend}/>
@@ -29,7 +36,7 @@ const Commentaire = ({id}) => {
           
         Texte:
         <input type="text" value={commentaire} onChange={e => setCommentaire(e.target.value)}/>
-      <button type="submit" value="Envoyer" onClick={handleClick}>Envoyée</button>
+      <button type="submit" value="Envoyer" onClick={HandleClick}>Envoyée</button>
         </div>
         </div>
     )
@@ -37,7 +44,7 @@ const Commentaire = ({id}) => {
 
 function Commentaires ({id, inputSend}) { 
     const [getCommentaires, setGetCommentaires] = useState([])
-useEffect(() => {
+    useEffect(() => {
         axios.get(`http://localhost:3001/api/commentaire/${id}`)
         .then(res => setGetCommentaires(res.data.results))
         .catch(err => console.error(err))
@@ -47,7 +54,8 @@ useEffect(() => {
         <div>
             {getCommentaires.map(commentaire => 
                 <div key={commentaire.id}>
-                    <h5>{commentaire.texte}</h5>
+                    <p>{commentaire.firstname} {commentaire.lastname}</p>
+                    <p>{commentaire.texte}</p>
                 </div>
             )}
         </div>
