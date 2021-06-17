@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+
 
 
 const employeId = localStorage.getItem("id")
@@ -15,7 +15,7 @@ const Commentaire = ({id}) => {
         employeID: employeId,
         publicationID: id,
     }
-    
+
     const HandleClick = () => {
         setInputSend(object);
     }
