@@ -2,6 +2,12 @@ import {useState, useEffect} from 'react';
 import Publier from './Publier';
 import axios from 'axios';
 import Commentaire from './Commentaire'
+import jwt_decode from "jwt-decode";
+
+const token = localStorage.getItem("token");
+const decoded = token && jwt_decode(token);
+const setId = decoded == null ? 0 : localStorage.setItem("id", decoded.employesId)
+console.log(setId)
 
 
  const Home = () => {

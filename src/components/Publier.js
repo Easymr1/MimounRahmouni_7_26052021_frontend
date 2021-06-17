@@ -2,8 +2,16 @@ import { useForm } from "react-hook-form";
 import {useState, useEffect} from 'react';
 import axios from "axios";
 
+const employeId = localStorage.getItem("id")
+
 const Publier = () => {
-    const {register, handleSubmit} = useForm();
+    const {register, handleSubmit} = useForm({
+        defaultValueas: {
+            titre: '',
+            texte: '',
+            employeID: employeId,
+        }
+    });
     const [inputSend, setInputSend] = useState(false)
     
     useEffect(() => {
@@ -11,6 +19,7 @@ const Publier = () => {
           }, [inputSend]);
 
     function onSubmit (publier) {
+        console.log(publier)
             axios.post('http://localhost:3001/api/publication/', publier)
             .then(response => console.log(response))
             .catch();
@@ -24,8 +33,6 @@ const Publier = () => {
         <input type="text" {...register("titre")} />
         Texte:
         <input type="text" {...register("texte")} />
-        ID:
-        <input type="number" {...register("employesID")} />
         
       </label>
       <button type="submit" value="Envoyer" onClick={() => setInputSend(true)}>Envoyée</button>
