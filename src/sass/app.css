@@ -47,4 +47,15 @@
       -ms-flex-align: center;
           align-items: center;
 }
+
+.publication {
+  border-radius: 50px;
+  border-radius: 44px;
+  background: #ffffff;
+  -webkit-box-shadow: 41px 41px 82px #d9d9d9, -41px -41px 82px #ffffff;
+          box-shadow: 41px 41px 82px #d9d9d9, -41px -41px 82px #ffffff;
+  width: 60%;
+  margin: 2rem;
+  padding: 1rem;
+}
 /*# sourceMappingURL=app.css.map */

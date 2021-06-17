@@ -7,9 +7,8 @@ const Publier = () => {
     const [inputSend, setInputSend] = useState(false)
     
     useEffect(() => {
-                setInputSend(false)
-          }, [inputSend])
-    console.log(inputSend)
+            setInputSend(false)
+          }, [inputSend]);
 
     function onSubmit (publier) {
             axios.post('http://localhost:3001/api/publication/', publier)
