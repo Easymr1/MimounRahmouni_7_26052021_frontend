@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import axios from "axios";
 import Commentaire from './Commentaire'
 import jwt_decode from "jwt-decode";
+import { scryRenderedDOMComponentsWithTag } from 'react-dom/test-utils';
 
 const token = localStorage.getItem("token");
 const decoded = token && jwt_decode(token);
@@ -9,38 +10,73 @@ const setId = decoded == null ? 0 : localStorage.setItem("id", decoded.employesI
 
 
 const employeId = localStorage.getItem("id")
+const Publications = ({}) => {
+    const [getPublication, setGetPublication] = useState([])
+    const [miseajour, setMiseajour] = useState(0)
 
-const CreePublications = () => {
+  
 
+    useEffect(() => {
+        axios.get('http://localhost:3001/api/publication/')
+        .then(res => {
+            setGetPublication(res.data.results)
+            console.log(res)
+        })
+        .catch(err => console.error(err))
+    }, [miseajour, getPublication.length])
+
+    return (
+        <>
+        <CreePublications setGetPublication={setGetPublication} getPublication={getPublication}/>
+        <section className='section'>
+            {getPublication.map(publication =>
+                <article className='publication' key={publication.id}>
+                <p>{publication.firstname} {publication.lastname}</p>
+                <SuppressionPublication id={publication.id} employeIdd={publication.employeID} miseajour={miseajour} setMiseajour={setMiseajour}/>
+                <h2>{publication.titre}</h2>
+                <p>{publication.texte}</p>
+                
+                <Commentaire id={publication.id}/>
+            </article>
+                )}
+        </section>
+        </>
+    )
+}
+
+
+const CreePublications = ({getPublication, setGetPublication}) => {
     const [inputSend, setInputSend] = useState({})
     const [titre, setTitre] = useState('')
     const [texte, setTexte] = useState('')
-
-    const object = {
-        titre: titre,
-        texte: texte,
-        employeID: employeId,
-    }
     
     const HandleClick = () => {
-        setInputSend(object);
-    }
-
-    
-    useEffect(() => {
-        axios.post('http://localhost:3001/api/publication/', inputSend)
+        setInputSend({
+            titre: titre,
+            texte: texte,
+            employeID: employeId,
+        }
+        );
+        console.log(getPublication);
+        axios.post('http://localhost:3001/api/publication/', {
+            titre: titre,
+            texte: texte,
+            employeID: employeId,
+        })
          .then(response => {
              console.log(response);
               setInputSend({});
                setTexte('');
-               setTitre('')
+               setTitre('');
+               setGetPublication([...getPublication, response])
             })
          .catch(err => console.error(err));
+    }
+
+    useEffect(() => {
+        
     }, [inputSend])
 
-    console.log(object)
-
-    
       return (
           <div>
             <div>
@@ -50,37 +86,39 @@ const CreePublications = () => {
             <input type="text" value={texte} onChange={e => setTexte(e.target.value)}/>
             <button type="submit" value="Envoyer" onClick={HandleClick}>Envoyée</button>
         </div>
-        <Publications inputSend={inputSend}/>
         </div>
     )
 };
 
-const Publications = ({inputSend}) => {
-    const [getPublication, setGetPublication] = useState([])
 
-    const [refresh, setRefresh] = useState(false)
 
-    useEffect(() => {
-        axios.get('http://localhost:3001/api/publication')
-        .then(res => setGetPublication(res.data.results), setRefresh(false))
-        .catch(err => console.error(err))
-    }, [inputSend])
-
-    return (
-        <section className='section'>
-            <button onClick={() => setRefresh(true)}>Actualiser</button>
-            {getPublication.map(publication =>
-                <article className='publication' key={publication.id}>
-                <p>{publication.firstname} {publication.lastname}</p>
-                <h2>{publication.titre}</h2>
-                <p>{publication.texte}</p>
+const SuppressionPublication = ({id,  employeIdd, miseajour, setMiseajour}) => {
+    const [supprimer, setSupprimer] = useState();
+   
+    
+    const handleClick = () => {
+                setSupprimer(id)
+                setMiseajour(1)
                 
-                <Commentaire id={publication.id}/>
-            </article>
-                )}
-        </section>
-    )
+                axios.delete(`http://localhost:3001/api/publication/${supprimer}`)
+            .then(res => console.log(res), setSupprimer(), setMiseajour(0))
+            .catch(err => console.error(err))
+            }
+
+        useEffect(() => {
+            
+            }, [supprimer, miseajour])
+
+            if(employeIdd == employeId) {
+                return (
+                <button key={id} type='button' onClick={handleClick}>Supprimer</button>
+            )
+            } else {
+                return (
+                    <p></p>
+                )
+            }
 }
 
 
-export default CreePublications;
+export default Publications;

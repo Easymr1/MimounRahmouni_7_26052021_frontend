@@ -18,20 +18,18 @@ const Commentaire = ({id}) => {
 
     const HandleClick = () => {
         setInputSend(object);
-    }
-
-    
-    useEffect(() => {
         axios.post('http://localhost:3001/api/commentaire', inputSend)
          .then(response => {
              console.log(response);
               setInputSend({});
                setCommentaire('')})
          .catch(err => console.error(err));
+    }
+
+    useEffect(() => {
+        
     }, [inputSend])
 
-
-    
       return (
           <div>
               <Commentaires id={id} inputSend={inputSend} employeId={employeId}/>

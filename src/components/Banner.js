@@ -3,19 +3,25 @@ import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 
 
-const Banner = () => {
+const Banner = ({connect, setConnect}) => {
     const [refresh, setRefresh] = useState(false)
     useEffect(() => {
-        setRefresh(false)
-    }, [refresh])
+        setRefresh(false);
+    }, [refresh, connect])
+
+    const HandleClick = () => {
+        localStorage.clear();
+        setRefresh(true);
+
+    }
 
     let statutLog; 
 
     if(localStorage.getItem('token')) {
         statutLog = (
             <ul className='banner_nav'>
-                <Link to='/login'>
-                <li className='banner_nav-li' onClick={() => {localStorage.clear(); setRefresh(true);}}>Déconnection</li>
+                <Link to='/login' >
+                <li className='banner_nav-li' onClick={HandleClick}>Déconnection</li>
                 </Link>
             </ul>
 )
