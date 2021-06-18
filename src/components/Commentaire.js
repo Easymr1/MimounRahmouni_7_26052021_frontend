@@ -1,9 +1,8 @@
 import {useState, useEffect} from 'react';
 import axios from "axios";
-
-
-
-const employeId = localStorage.getItem("id")
+import jwt_decode from "jwt-decode";
+const token = localStorage.getItem("token");
+const decoded = token && jwt_decode(token);
 
 const Commentaire = ({id}) => {
 
@@ -12,7 +11,7 @@ const Commentaire = ({id}) => {
 
     const object = {
         texte: commentaire,
-        employeID: employeId,
+        employeID: decoded.employesId,
         publicationID: id,
     }
 
@@ -32,7 +31,7 @@ const Commentaire = ({id}) => {
 
       return (
           <div>
-              <Commentaires id={id} inputSend={inputSend} employeId={employeId}/>
+              <Commentaires id={id} inputSend={inputSend}/>
         <div>
           
         Texte:
