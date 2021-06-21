@@ -4,7 +4,7 @@ import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 const decoded = token && jwt_decode(token);
 
-function Commentaires ({id, employeID, post, getPost}) { 
+function Commentaires ({id, post, getPost}) { 
     const [getCommentaires, setGetCommentaires] = useState([])
 
     useEffect(() => {
@@ -23,7 +23,7 @@ function Commentaires ({id, employeID, post, getPost}) {
                 <div key={commentaire.id}>
                     <p>{commentaire.firstname} {commentaire.lastname}</p>
                     <p>{commentaire.texte}</p>
-                    <DeleteCommentaire id={commentaire.id} employeID={employeID} getPost={getPost}/>
+                    <DeleteCommentaire id={commentaire.id} employeID={commentaire.employeID} getPost={getPost}/>
                 </div>
             )}
             <PostCommentaire id={id} getPost={getPost}/>
@@ -58,7 +58,6 @@ const PostCommentaire = ({id, getPost}) => {
 }
 
 const DeleteCommentaire = ({id, employeID, getPost}) => {
-    console.log(id)
     const HandleClick = () => {
         axios.delete(`http://localhost:3001/api/commentaire/${id}`)
         .then(res => getPost(res.data.results.insertId))
