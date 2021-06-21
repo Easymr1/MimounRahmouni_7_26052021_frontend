@@ -4,63 +4,80 @@ import jwt_decode from "jwt-decode";
 const token = localStorage.getItem("token");
 const decoded = token && jwt_decode(token);
 
-const Commentaire = ({id}) => {
-
-    const [inputSend, setInputSend] = useState({})
-    const [commentaire, setCommentaire] = useState('')
-
-    const object = {
-        texte: commentaire,
-        employeID: decoded.employesId,
-        publicationID: id,
-    }
-
-    const HandleClick = () => {
-        setInputSend(object);
-        axios.post('http://localhost:3001/api/commentaire', inputSend)
-         .then(response => {
-             console.log(response);
-              setInputSend({});
-               setCommentaire('')})
-         .catch(err => console.error(err));
-    }
-
-    useEffect(() => {
-        
-    }, [inputSend])
-
-      return (
-          <div>
-              <Commentaires id={id} inputSend={inputSend}/>
-        <div>
-          
-        Texte:
-        <input type="text" value={commentaire} onChange={e => setCommentaire(e.target.value)}/>
-      <button type="submit" value="Envoyer" onClick={HandleClick}>Envoyée</button>
-        </div>
-        </div>
-    )
-};
-
-function Commentaires ({id, inputSend}) { 
+function Commentaires ({id, employeID, post, getPost}) { 
     const [getCommentaires, setGetCommentaires] = useState([])
+
     useEffect(() => {
         axios.get(`http://localhost:3001/api/commentaire/${id}`)
-        .then(res => setGetCommentaires(res.data.results))
+        .then(res => {
+            setGetCommentaires(res.data.results)
+            getPost()
+        })
         .catch(err => console.error(err))
-    }, [inputSend])
+    }, [post])
 
     return (
-        <div>
+        <>
             {getCommentaires.map(commentaire => 
+            
                 <div key={commentaire.id}>
                     <p>{commentaire.firstname} {commentaire.lastname}</p>
                     <p>{commentaire.texte}</p>
+                    <DeleteCommentaire id={commentaire.id} employeID={employeID} getPost={getPost}/>
                 </div>
             )}
-        </div>
+            <PostCommentaire id={id} getPost={getPost}/>
+            
+        </>
     )
 };
 
+const PostCommentaire = ({id, getPost}) => {
+    const [texte, setTexte] = useState('');
 
-export default Commentaire;
+    const commentaire = {
+        texte: texte,
+        employeID: decoded.employesId,
+        publicationID: id,
+
+    }
+
+    const HandleClick = () => {
+        axios.post(`http://localhost:3001/api/commentaire`, commentaire)
+        .then(res => getPost(res.data.result.insertId))
+        .catch()
+    }
+
+    return (
+        <>
+        Texte:
+        <input type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>
+        <button type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>
+        </>
+    )
+}
+
+const DeleteCommentaire = ({id, employeID, getPost}) => {
+    console.log(id)
+    const HandleClick = () => {
+        axios.delete(`http://localhost:3001/api/commentaire/${id}`)
+        .then(res => getPost(res.data.results.insertId))
+        .catch(err => console.log(err))
+    }
+
+    if(employeID === decoded.employesId) {
+       return (
+        <>
+        <button type="submit" value="Supprimer" onClick={HandleClick}> Supprimer</button>
+        </>
+    ) 
+    } else {
+        return (
+         <>
+        </>   
+        )
+    }
+}
+
+
+export default Commentaires;

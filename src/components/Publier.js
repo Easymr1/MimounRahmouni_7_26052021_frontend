@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 import axios from "axios";
-import Commentaire from './Commentaire'
+import Commentaires from './Commentaire'
 import jwt_decode from "jwt-decode";
 
 
@@ -12,7 +12,6 @@ const Publications = ({}) => {
     const [publications, getPublications] = useState([]);
     const [post, getPost] = useState()
   
-    console.log(publications.length)
     useEffect(() => {
         axios.get('http://localhost:3001/api/publication/')
         .then((response) => {
@@ -30,8 +29,8 @@ console.log(publications)
                 <p>{publication.firstname} {publication.lastname}</p>
                 <h3>{publication.titre}</h3>
                 <p>{publication.texte}</p>
-                <DeletePublication id={ publication.id} getPost={getPost}/>
-                <Commentaire id={ publication.id}/>
+                <DeletePublication id={ publication.id} employeID={publication.employeID} getPost={getPost}/>
+                <Commentaires id={ publication.id} employeID={publication.employeID} post={post} getPost={getPost}/>
             </article>
             )}
             
@@ -68,19 +67,26 @@ const PostPublication = ({post, getPost}) => {
     )
 }
 
-const DeletePublication = ({id, getPost}) => {
+const DeletePublication = ({id, employeID, getPost}) => {
 
     const HandleClick = () => {
         axios.delete(`http://localhost:3001/api/publication/${id}`)
         .then(res => getPost(res.data.results.insertId))
         .catch(err => console.error(err))
     }
-
-    return (
+    if (employeID === decoded.employesId) {
+        return (
         <>
         <button type="submit" value="Supprimer" onClick={HandleClick}>Supprimer</button>
         </>
     )
+    } else {
+        return (
+            <>
+            </>
+        )
+    }
+    
 }
 
 export default Publications;
