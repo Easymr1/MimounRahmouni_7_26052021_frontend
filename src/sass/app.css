@@ -58,4 +58,9 @@
   margin: 2rem;
   padding: 1rem;
 }
+
+.commentaire {
+  border: 1px solid #2d3436;
+  min-height: 100px;
+}
 /*# sourceMappingURL=app.css.map */

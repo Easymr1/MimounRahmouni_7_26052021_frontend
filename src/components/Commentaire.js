@@ -5,7 +5,8 @@ const token = localStorage.getItem("token");
 const decoded = token && jwt_decode(token);
 
 function Commentaires ({id, post, getPost}) { 
-    const [getCommentaires, setGetCommentaires] = useState([])
+    const [getCommentaires, setGetCommentaires] = useState([]);
+    const [updateId, setUpdateId] = useState();
 
     useEffect(() => {
         axios.get(`http://localhost:3001/api/commentaire/${id}`)
@@ -15,15 +16,31 @@ function Commentaires ({id, post, getPost}) {
         })
         .catch(err => console.error(err))
     }, [post])
-
+    console.log(decoded.employesId)
     return (
         <>
             {getCommentaires.map(commentaire => 
-            
-                <div key={commentaire.id}>
+                <div className="commentaire" key={commentaire.id}>
+                    {commentaire.employeID === decoded.employesId ?
+                    <>
+                    {updateId === commentaire.id ? 
+                    <UpdatePublication id={commentaire.id} setUpdateId={setUpdateId} getPost={getPost}/>
+                :
+                <>
+                <h5>{commentaire.firstname} {commentaire.lastname}</h5>
+                    <p>{commentaire.texte}</p>
+                <DeleteCommentaire id={commentaire.id} employeID={commentaire.employeID} getPost={getPost}/>
+                <button onClick={() => setUpdateId(commentaire.id)}>Modifier</button>
+                </>
+                }
+                    </>
+                :
+                <>
                     <p>{commentaire.firstname} {commentaire.lastname}</p>
                     <p>{commentaire.texte}</p>
-                    <DeleteCommentaire id={commentaire.id} employeID={commentaire.employeID} getPost={getPost}/>
+                    <h4>Pas ma publication</h4>
+                </>
+                }
                 </div>
             )}
             <PostCommentaire id={id} getPost={getPost}/>
@@ -76,6 +93,31 @@ const DeleteCommentaire = ({id, employeID, getPost}) => {
         </>   
         )
     }
+}
+
+const UpdatePublication = ({id, getPost, setUpdateId}) => {
+    const [texte, setTexte] = useState('');
+console.log(texte)
+
+    const HandleClick = () => {
+        axios.put(`http://localhost:3001/api/commentaire/${id}`, {texte})
+        .then(res => {
+            getPost(res.data.results.insertId);
+            setUpdateId(res.data.results.insertId);
+        })
+        .catch(err => console.error(err))
+        
+    }
+
+    
+     return (  
+         <>
+        Texte:
+        <input type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>
+        <button type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>
+        <button type="submit" value="Annuler" onClick={() => setUpdateId(0)}>Annuler</button>
+        </>
+        )
 }
 
 
