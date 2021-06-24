@@ -2,7 +2,9 @@ import {useState, useEffect} from 'react';
 import axios from "axios";
 import Commentaires from './Commentaire'
 import jwt_decode from "jwt-decode";
-import { get } from 'react-hook-form';
+import { get, set } from 'react-hook-form';
+import {NavLink} from 'react-router-dom';
+import Profil from './Profil';
 
 
 const token = localStorage.getItem("token");
@@ -21,20 +23,25 @@ const Publications = ({}) => {
             getPost();
         })
     }, [post, updateId])
-    
+
     return (
         <>
+        <section className="section">
         <PostPublication post={post} getPost={getPost}/>
-       <section>
+       
            
            {publications.map( publication => 
            <article key={ publication.id} className="publication">
+               <NavLink exact to='/profil'>
+                <img src={publication.image_url} width='50' height='50'/>
+                <p>{publication.firstname} {publication.lastname}</p>
+                </NavLink>
            {publication.employeID === decoded.employesId ?
             <>
-                <p>{publication.firstname} {publication.lastname}</p>
+                
                 {publication.id === updateId ?
                 <>
-                    <UpdatePublication id={ publication.id} employeID={publication.employeID} getPost={getPost} setUpdateId={setUpdateId}/>
+                    <UpdatePublication data={publication} getPost={getPost} setUpdateId={setUpdateId}/>
                     <button type="submit" value="modifier" onClick={() => setUpdateId(0)}>Annuler</button>
                 </>
                 :
@@ -50,7 +57,7 @@ const Publications = ({}) => {
             </>
             :
             <>
-                <p>{publication.firstname} {publication.lastname}</p>
+
                     <h3>{publication.titre}</h3>
                     <p>{publication.texte}</p>
                 <Commentaires id={ publication.id} post={post} getPost={getPost}/>
@@ -65,12 +72,16 @@ const Publications = ({}) => {
 }
 
 const PostPublication = ({post, getPost}) => {
-    const [titre, setTitre] = useState('')
-    const [texte, setTexte] = useState('')
+    const [titre, setTitre] = useState('');
+    const [texte, setTexte] = useState('');
+    const [image, setImage] = useState('');
+    const [texteOption, setTexteOption] = useState(false);
+    const [imageOption, setImageOption] = useState(false);
 
     const publication = {
         titre: titre,
         texte: texte,
+        image: image,
         employeID: decoded.employesId,
     }
     const HandleClick = () => {
@@ -84,9 +95,12 @@ const PostPublication = ({post, getPost}) => {
         <>
         Titre:
         <input type='texte' value={titre} onChange={e => setTitre(e.target.value)}/>
-        Texte:
-        <input type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>
-
+        {imageOption && <input type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.value)}/>}
+        {texteOption && <textarea rows="4" cols="50" type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>}
+        
+        <button type="submit" value="image" onClick={() => {setImageOption(true); setTexteOption(false)}}>Image</button>
+        <button type="submit" value="texte" onClick={() => {setImageOption(false); setTexteOption(true)}}>Texte</button>
+        
         <button type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>
         </>
     )
@@ -95,11 +109,11 @@ const PostPublication = ({post, getPost}) => {
 const DeletePublication = ({id, employeID, getPost, setUpdateId}) => {
 
     const HandleClick = () => {
-        setUpdateId(0);
+        
         axios.delete(`http://localhost:3001/api/publication/${id}`)
         .then(res => {
             getPost(res.data.results.insertId);
-            
+            setUpdateId();
         })
         .catch(err => console.error(err));
         
@@ -119,17 +133,17 @@ const DeletePublication = ({id, employeID, getPost, setUpdateId}) => {
     
 }
 
-const UpdatePublication = ({id, employeID, getPost, setUpdateId}) => {
-    const [titre, setTitre] = useState('');
-    const [texte, setTexte] = useState('');
-
+const UpdatePublication = ({data, getPost, setUpdateId}) => {
+    const [titre, setTitre] = useState(data.titre);
+    const [texte, setTexte] = useState(data.texte);
+    
     let object ={
         titre: titre,
         texte: texte,
     }
 
     const HandleClick = () => {
-        axios.put(`http://localhost:3001/api/publication/${id}`, object)
+        axios.put(`http://localhost:3001/api/publication/${data.id}`, object)
         .then(res => {
             getPost(res.data.results.insertId);
             setUpdateId(res.data.results.insertId);
@@ -144,7 +158,7 @@ const UpdatePublication = ({id, employeID, getPost, setUpdateId}) => {
         Titre:
         <input type='texte' value={titre} onChange={e => setTitre(e.target.value)}/>
         Texte:
-        <input type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>
+        <textarea rows="4" cols="50" type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>
 
         <button type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>
         </>

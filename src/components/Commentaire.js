@@ -1,13 +1,14 @@
 import {useState, useEffect} from 'react';
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import {NavLink} from 'react-router-dom';
 const token = localStorage.getItem("token");
 const decoded = token && jwt_decode(token);
 
 function Commentaires ({id, post, getPost}) { 
     const [getCommentaires, setGetCommentaires] = useState([]);
     const [updateId, setUpdateId] = useState();
-
+    
     useEffect(() => {
         axios.get(`http://localhost:3001/api/commentaire/${id}`)
         .then(res => {
@@ -16,18 +17,21 @@ function Commentaires ({id, post, getPost}) {
         })
         .catch(err => console.error(err))
     }, [post])
-    console.log(decoded.employesId)
+    
     return (
         <>
             {getCommentaires.map(commentaire => 
                 <div className="commentaire" key={commentaire.id}>
-                    {commentaire.employeID === decoded.employesId ?
+                <NavLink exact to='/profil'>
+                <img src={commentaire.image_url} width='50' height='50'/>
+                <p>{commentaire.firstname} {commentaire.lastname}</p>
+                </NavLink>
+                    {commentaire.employeID === decoded.employesId || decoded.admin ?
                     <>
                     {updateId === commentaire.id ? 
-                    <UpdatePublication id={commentaire.id} setUpdateId={setUpdateId} getPost={getPost}/>
+                    <UpdatePublication data={commentaire} setUpdateId={setUpdateId} getPost={getPost}/>
                 :
                 <>
-                <h5>{commentaire.firstname} {commentaire.lastname}</h5>
                     <p>{commentaire.texte}</p>
                 <DeleteCommentaire id={commentaire.id} employeID={commentaire.employeID} getPost={getPost}/>
                 <button onClick={() => setUpdateId(commentaire.id)}>Modifier</button>
@@ -36,7 +40,6 @@ function Commentaires ({id, post, getPost}) {
                     </>
                 :
                 <>
-                    <p>{commentaire.firstname} {commentaire.lastname}</p>
                     <p>{commentaire.texte}</p>
                     <h4>Pas ma publication</h4>
                 </>
@@ -81,7 +84,7 @@ const DeleteCommentaire = ({id, employeID, getPost}) => {
         .catch(err => console.log(err))
     }
 
-    if(employeID === decoded.employesId) {
+    if(employeID === decoded.employesId || decoded.admin) {
        return (
         <>
         <button type="submit" value="Supprimer" onClick={HandleClick}> Supprimer</button>
@@ -95,12 +98,12 @@ const DeleteCommentaire = ({id, employeID, getPost}) => {
     }
 }
 
-const UpdatePublication = ({id, getPost, setUpdateId}) => {
-    const [texte, setTexte] = useState('');
-console.log(texte)
+const UpdatePublication = ({data, getPost, setUpdateId}) => {
+    const [texte, setTexte] = useState(data.texte);
+
 
     const HandleClick = () => {
-        axios.put(`http://localhost:3001/api/commentaire/${id}`, {texte})
+        axios.put(`http://localhost:3001/api/commentaire/${data.id}`, {texte})
         .then(res => {
             getPost(res.data.results.insertId);
             setUpdateId(res.data.results.insertId);

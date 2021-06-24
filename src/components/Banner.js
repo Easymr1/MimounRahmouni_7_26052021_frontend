@@ -13,6 +13,7 @@ const Banner = ({connect, setConnect}) => {
         localStorage.clear();
         setRefresh(true);
 
+
     }
 
     let statutLog; 
@@ -20,9 +21,7 @@ const Banner = ({connect, setConnect}) => {
     if(localStorage.getItem('token')) {
         statutLog = (
             <ul className='banner_nav'>
-                <Link to='/login' >
                 <li className='banner_nav-li' onClick={HandleClick}>Déconnection</li>
-                </Link>
             </ul>
 )
     } else {
