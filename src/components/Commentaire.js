@@ -22,7 +22,7 @@ function Commentaires ({id, post, getPost}) {
         <>
             {getCommentaires.map(commentaire => 
                 <div className="commentaire" key={commentaire.id}>
-                <NavLink exact to='/profil'>
+                <NavLink exact to={`/profil/${commentaire.employeID}`}>
                 <img src={commentaire.image_url} width='50' height='50'/>
                 <p>{commentaire.firstname} {commentaire.lastname}</p>
                 </NavLink>

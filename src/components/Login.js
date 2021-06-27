@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import {useState, useEffect} from 'react';
+import {Redirect} from 'react-router-dom'
 
-function Login () {
+function Login (props) {
+  console.log(props)
   const {register, handleSubmit} = useForm();
 
   const [refresh, setRefresh] = useState(false)
@@ -10,13 +12,14 @@ function Login () {
         setRefresh(false)
     }, [refresh])
 
-
+    console.log(props)
   function onSubmit (publier) {
     console.log(publier)
-    axios.post('http://localhost:3001/api/employes/login', publier)
+    return axios.post('http://localhost:3001/api/employes/login', publier)
     .then(res => {
-      console.log(res.data.token)
-      localStorage.setItem('token', res.data.token)
+      console.log(res.data.token);
+      localStorage.setItem('token', res.data.token);
+      return <Redirect to='/'/>;
     })
     .catch(err => console.log(err));
 }

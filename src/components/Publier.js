@@ -32,13 +32,12 @@ const Publications = ({}) => {
            
            {publications.map( publication => 
            <article key={ publication.id} className="publication">
-               <NavLink exact to='/profil'>
+               <NavLink exact to={`/profil/${publication.employeID}`}>
                 <img src={publication.image_url} width='50' height='50'/>
                 <p>{publication.firstname} {publication.lastname}</p>
                 </NavLink>
-           {publication.employeID === decoded.employesId ?
+           {publication.employeID === decoded.employesId ||  decoded.admin ?
             <>
-                
                 {publication.id === updateId ?
                 <>
                     <UpdatePublication data={publication} getPost={getPost} setUpdateId={setUpdateId}/>
@@ -52,17 +51,14 @@ const Publications = ({}) => {
                     <button type="submit" value="modifier" onClick={() => setUpdateId(publication.id)}>Modifier</button>
                 </>
                 }
-                    
-                <Commentaires id={ publication.id} post={post} getPost={getPost}/>
             </>
             :
             <>
-
                     <h3>{publication.titre}</h3>
                     <p>{publication.texte}</p>
-                <Commentaires id={ publication.id} post={post} getPost={getPost}/>
             </>
            }
+           <Commentaires id={ publication.id} post={post} getPost={getPost}/>
            </article>
             )}
        </section>
@@ -78,13 +74,20 @@ const PostPublication = ({post, getPost}) => {
     const [texteOption, setTexteOption] = useState(false);
     const [imageOption, setImageOption] = useState(false);
 
+    
+    const formData = new FormData();
+    formData.append('image', image)
     const publication = {
         titre: titre,
         texte: texte,
-        image: image,
+        image: formData.get('image'),
         employeID: decoded.employesId,
     }
+    console.log(publication.image)
+
     const HandleClick = () => {
+
+        
         console.log(publication)
         axios.post('http://localhost:3001/api/publication/', publication)
         .then(res => getPost(res.data.results.insertId))
@@ -95,7 +98,7 @@ const PostPublication = ({post, getPost}) => {
         <>
         Titre:
         <input type='texte' value={titre} onChange={e => setTitre(e.target.value)}/>
-        {imageOption && <input type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.value)}/>}
+        {imageOption && <input type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.files[0])}/>}
         {texteOption && <textarea rows="4" cols="50" type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>}
         
         <button type="submit" value="image" onClick={() => {setImageOption(true); setTexteOption(false)}}>Image</button>
@@ -118,7 +121,7 @@ const DeletePublication = ({id, employeID, getPost, setUpdateId}) => {
         .catch(err => console.error(err));
         
     }
-    if (employeID === decoded.employesId) {
+    if (employeID === decoded.employesId ||  decoded.admin) {
         return (
         <>
         <button type="submit" value="Supprimer" onClick={HandleClick}>Supprimer</button>
