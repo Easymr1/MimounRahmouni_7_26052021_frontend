@@ -15,15 +15,23 @@ const Publications = ({}) => {
     const [publications, getPublications] = useState([]);
     const [post, getPost] = useState();
     const [updateId, setUpdateId] = useState();
-  
+
+
     useEffect(() => {
-        axios.get('http://localhost:3001/api/publication/')
+        axios.get('http://localhost:3001/api/publication/', {
+            data:{
+                employeID: decoded.employesId,
+            },
+        headers: {
+                'Authorization': `Bearer ${token}`,
+            } 
+        } )
         .then((response) => {
             getPublications(response.data.results);
             getPost();
         })
     }, [post, updateId])
-
+console.log(publications)
     return (
         <>
         <section className="section">
@@ -89,7 +97,11 @@ const PostPublication = ({post, getPost}) => {
 
         
         console.log(publication)
-        axios.post('http://localhost:3001/api/publication/', publication)
+        axios.post('http://localhost:3001/api/publication/', publication, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            } 
+        })
         .then(res => getPost(res.data.results.insertId))
         .catch()
     }
@@ -113,7 +125,14 @@ const DeletePublication = ({id, employeID, getPost, setUpdateId}) => {
 
     const HandleClick = () => {
         
-        axios.delete(`http://localhost:3001/api/publication/${id}`)
+        axios.delete(`http://localhost:3001/api/publication/${id}`, {
+            data:{
+                employeID: decoded.employesId,
+            },
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            } 
+        })
         .then(res => {
             getPost(res.data.results.insertId);
             setUpdateId();
@@ -143,10 +162,15 @@ const UpdatePublication = ({data, getPost, setUpdateId}) => {
     let object ={
         titre: titre,
         texte: texte,
+        employeID: decoded.employesId,
     }
 
     const HandleClick = () => {
-        axios.put(`http://localhost:3001/api/publication/${data.id}`, object)
+        axios.put(`http://localhost:3001/api/publication/${data.id}`, object, {
+        headers: {
+                'Authorization': `Bearer ${token}`,
+            } 
+        })
         .then(res => {
             getPost(res.data.results.insertId);
             setUpdateId(res.data.results.insertId);
