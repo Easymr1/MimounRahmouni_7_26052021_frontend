@@ -31,7 +31,7 @@ const Publications = ({}) => {
             getPost();
         })
     }, [post, updateId])
-console.log(publications)
+
     return (
         <>
         <section className="section">
@@ -87,15 +87,16 @@ const PostPublication = ({post, getPost}) => {
 
     const HandleClick = () => {
         const data = new FormData();
-        data.append('titre', titre)
-        data.append('texte', texte)
+        data.append('titre', JSON.stringify(titre))
+        data.append('texte', JSON.stringify(texte))
         data.append('image', image)
-        data.append('employeID', decoded.employesId)
+        data.append('employeID', JSON.stringify(decoded.employesId))
         
         console.log(data);
         axios.post('http://localhost:3001/api/publication/', data, {
             headers: {
                 'Authorization': `Bearer ${token}`,
+                'content-type': 'application/json'
             } 
         })
         .then(res => getPost(res.data.results.insertId))
@@ -103,18 +104,19 @@ const PostPublication = ({post, getPost}) => {
     }
 
     return (
-        <>
-        <form>
+        <div className="banner_publication">
+        <form className="form_publication">
         Titre:
         <input type='texte' value={titre} onChange={e => setTitre(e.target.value)}/>
         {imageOption && <input type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.files[0])}/>}
         {texteOption && <textarea rows="4" cols="50" type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>}
         </form>
+        <div>
         <button type="button" value="image" onClick={() => {setImageOption(true); setTexteOption(false)}}>Image</button>
         <button type="button" value="texte" onClick={() => {setImageOption(false); setTexteOption(true)}}>Texte</button>
-        
+        </div>
         <button type="submit" onClick={HandleClick}>Envoyer</button>
-        </>
+        </div>
     )
 }
 
@@ -132,7 +134,6 @@ const DeletePublication = ({id, employeID, getPost, setUpdateId}) => {
         })
         .then(res => {
             getPost(res.data.results.insertId);
-            setUpdateId();
         })
         .catch(err => console.error(err));
         

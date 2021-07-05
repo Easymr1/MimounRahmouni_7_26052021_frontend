@@ -17,6 +17,19 @@
     flex-direction: column;
     justify-content: center;
 }
+.banner_publication {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom:2rem;
+    width: 100%;
+}
+
+.form_publication{
+    display: flex;
+    flex-direction:column;
+    margin-bottom: 1rem
+}
 
 .commentaire {
     border: 1px solid $color_primary;

@@ -1,39 +1,33 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import {useState, useEffect} from 'react';
-import {Redirect} from 'react-router-dom'
 
 function Login (props) {
-  console.log(props)
   const {register, handleSubmit} = useForm();
 
-  const [refresh, setRefresh] = useState(false)
-    useEffect(() => {
-        setRefresh(false)
-    }, [refresh])
+  const HandleClick = () => {
+    props.history.push("/");
+  }
 
-    console.log(props)
+console.log(props)
   function onSubmit (publier) {
-    console.log(publier)
-    return axios.post('http://localhost:3001/api/employes/login', publier)
+    axios.post('http://localhost:3001/api/employes/login', publier)
     .then(res => {
-      console.log(res.data.token);
       localStorage.setItem('token', res.data.token);
-      return <Redirect to='/'/>;
+      HandleClick();
     })
     .catch(err => console.log(err));
 }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-          <label>
+        <div className='login'>
+            <form className='login__form' onSubmit={handleSubmit(onSubmit)}>
+          <label className='login__form--label'>
           Courriel:
-            <input type="email" {...register("email")} />
+            <input className='login__form--label__email' type="email" {...register("email")} />
           Mot de passe:
-            <input type="password" {...register("password")} />
+            <input className='login__form--label__password' type="password" {...register("password")} />
           </label>
-          <button type="submit" value="Envoyer" onClick={() => setRefresh(true)}>Envoyée</button>
+          <button className='login__form--button' type="submit" value="Envoyer">Envoyée</button>
           </form>
         </div>
     )

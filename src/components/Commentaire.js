@@ -26,23 +26,23 @@ function Commentaires ({id, post, getPost}) {
                 <img src={commentaire.image_url} width='50' height='50'/>
                 <p>{commentaire.firstname} {commentaire.lastname}</p>
                 </NavLink>
-                    {commentaire.employeID === decoded.employesId || decoded.admin ?
+                {commentaire.employeID === decoded.employesId || decoded.admin ?
                     <>
                     {updateId === commentaire.id ? 
-                    <UpdatePublication data={commentaire} setUpdateId={setUpdateId} getPost={getPost}/>
-                :
-                <>
-                    <p>{commentaire.texte}</p>
-                <DeleteCommentaire id={commentaire.id} employeID={commentaire.employeID} getPost={getPost}/>
-                <button onClick={() => setUpdateId(commentaire.id)}>Modifier</button>
-                </>
-                }
+                        <UpdatePublication data={commentaire} setUpdateId={setUpdateId} getPost={getPost}/>
+                    :
+                        <>
+                        <p>{commentaire.texte}</p>
+                        <DeleteCommentaire id={commentaire.id} employeID={commentaire.employeID} getPost={getPost}/>
+                        <button onClick={() => setUpdateId(commentaire.id)}>Modifier</button>
+                        </>
+                    }
                     </>
                 :
-                <>
+                    <>
                     <p>{commentaire.texte}</p>
                     <h4>Pas ma publication</h4>
-                </>
+                    </>
                 }
                 </div>
             )}

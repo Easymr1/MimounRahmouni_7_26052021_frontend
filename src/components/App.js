@@ -3,16 +3,17 @@ import Home from './Home';
 import Login from './Login';
 import Signup from './Signup';
 import Profil from './Profil';
+import {useEffect, useState} from 'react'
 import '../sass/app.css';
 import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom';
 
 const token = localStorage.getItem('token');
-function App() {
-
+function App(props) {
+console.log(props)
   return (
     <>
-      <Router>
-        <Banner />
+      
+        <Route component={Banner} />
         <Switch>
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
@@ -25,7 +26,7 @@ function App() {
           <Redirect to='/login'/>
         }
         </Switch>
-      </Router>
+      
     </>
 ) 
 }

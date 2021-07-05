@@ -1,33 +1,33 @@
 import logo from '../assets/icon-left-font-monochrome-white.png';
-import {Link} from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import {useState, useEffect} from 'react';
-import Profil from './Profil';
 import {NavLink} from 'react-router-dom';
 import jwt_decode from "jwt-decode";
 
 const token = localStorage.getItem("token");
 const decoded = token && jwt_decode(token);
 
-const Banner = ({connect, setConnect}) => {
+const Banner = (props) => {
     const [refresh, setRefresh] = useState(false)
+
     useEffect(() => {
-        setRefresh(false);
-    }, [refresh, connect])
+        token && setRefresh(!refresh)
+    }, [token])
 
     const HandleClick = () => {
         localStorage.clear();
-        setRefresh(true);
-
-
+        setRefresh(true)
+        props.history.push("/login");
     }
 
     let statutLog; 
 
-    if(localStorage.getItem('token')) {
+    if(refresh) {
         statutLog = (
             <ul className='banner_nav'>
-                <NavLink exact to={`/profil/${decoded.employesId}`}>Profile</NavLink>
-                <li className='banner_nav-li' onClick={HandleClick}>Déconnection</li>
+                <NavLink className='banner_nav-li' exact to={`/`}>Home</NavLink>
+                <NavLink className='banner_nav-li' exact to={`/profil/${decoded.employesId}`}>Profile</NavLink>
+                <li className='banner_nav-li' onClick={HandleClick}>Déconnexion</li>
             </ul>
 )
     } else {

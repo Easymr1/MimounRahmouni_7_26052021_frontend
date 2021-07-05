@@ -1,0 +1,46 @@
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    &__form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 1rem;
+        border-radius: 2rem;
+        box-shadow: 0 0 1rem #b8b8b8;
+        min-width: 20rem;
+        height: 15rem;
+        &--label {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 8rem;
+            &__email {
+                border-radius: 1rem;
+                height: 1.5rem;
+                border: none;
+                box-shadow: 0 0 0.5rem #b8b8b8;
+            }
+            &__password {
+                border-radius: 1rem;
+                height: 1.5rem;
+                border: none;
+                box-shadow: 0 0 0.5rem #b8b8b8;
+            }
+        }
+        &--button {
+            border-radius: 1rem;
+            height: 2rem;
+            border: none;
+            box-shadow: 0 0 0.5rem #b8b8b8;
+            background-color: $color_primary;
+            color: white;
+            &:hover {
+                background-color: white;
+                color: $color_primary;
+            }
+        }
+    }
+}
