@@ -1,7 +1,7 @@
 
 import { useForm } from "react-hook-form";
 
-const Signup = () => {
+const Signup = (props) => {
     const {register, handleSubmit} = useForm();
     
       function onSubmit (signup) {
@@ -12,25 +12,26 @@ const Signup = () => {
           body: JSON.stringify(signup)
       };
       fetch('http://localhost:3001/api/employes/signup', requestOptions)
-          .then(response => response.json())
-          .then(data => console.log(data));
+          .then(response => {
+            response.json()
+          })
+          .catch()
+          
           }
       return (
-        <div>
-          <form onSubmit={handleSubmit(onSubmit)}>
-      <label>
+        <div className='signup'>
+          <form className='signup__form' onSubmit={handleSubmit(onSubmit)}>
+      <label className='signup__form--label'>
         Prénom:
-        <input type="text" {...register("firstname")} />
+        <input className='signup__form--label__input' type="text" {...register("firstname")} />
         Nom:
-        <input type="text" {...register("lastname")} />
+        <input className='signup__form--label__input' type="text" {...register("lastname")} />
         Courriel:
-        <input type="text" {...register("email")} />
+        <input className='signup__form--label__input' type="text" {...register("email")} />
         Mot de passe:
-        <input type="text" {...register("password")} />
-        Image:
-        <input type="text" {...register("img")}/>
+        <input className='signup__form--label__input' type="text" {...register("password")} />
       </label>
-      <input type="submit" value="Envoyer"/>
+      <input className='signup__form--button' type="submit" value="Envoyer"/>
     </form>
         </div>
     )

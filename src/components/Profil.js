@@ -73,7 +73,7 @@ const UpdateProfile = ({id, setRefresh, profile}) => {
         <label htmlFor="lastname">Last name:</label>
         <input type="text" name="lastname" value={lastname} onChange={e => setLastname(e.target.value)}/>
         <label htmlFor="image">Image:</label>
-        <input type='file' name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.files[0])}/>
+        <input type='file' name="image" accept='.jpg,.png,.gif' onChange={e => setImage(e.target.files[0])}/>
         {decoded.admin === 1 && 
         <>
         <label htmlFor="admin">Admin:</label>
