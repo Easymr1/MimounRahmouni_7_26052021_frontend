@@ -26,7 +26,7 @@ const Banner = (props) => {
         statutLog = (
             <ul className='banner_nav'>
                 <NavLink className='banner_nav-li' exact to={`/`}>Home</NavLink>
-                <NavLink className='banner_nav-li' exact to={`/profil/${decoded.employesId}`}>Profile</NavLink>
+                <NavLink className='banner_nav-li' exact to={`/profil/${decoded.employesId}`}>Profil</NavLink>
                 <li className='banner_nav-li' onClick={HandleClick}>Déconnexion</li>
             </ul>
 )
@@ -48,8 +48,8 @@ const Banner = (props) => {
             <header className='banner'>
             <img className="banner_logo" src={logo} alt='Logo groupomania'/>
             <nav>
-            {statutLog}
-        </nav>
+                {statutLog}
+            </nav>
             
         </header>
         )

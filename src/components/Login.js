@@ -27,7 +27,7 @@ console.log(props)
           Mot de passe:
             <input className='login__form--label__password' type="password" {...register("password")} />
           </label>
-          <button className='login__form--button' type="submit" value="Envoyer">Envoyer</button>
+          <button className='button__1' type="submit" value="Envoyer">Envoyer</button>
           </form>
         </div>
     )

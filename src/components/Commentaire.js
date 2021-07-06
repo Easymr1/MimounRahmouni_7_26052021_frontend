@@ -22,9 +22,9 @@ function Commentaires ({id, post, getPost}) {
         <>
             {getCommentaires.map(commentaire => 
                 <div className="commentaire" key={commentaire.id}>
-                <NavLink exact to={`/profil/${commentaire.employeID}`}>
-                <img src={commentaire.image_url} width='50' height='50'/>
-                <p>{commentaire.firstname} {commentaire.lastname}</p>
+                <NavLink className="publication__header" exact to={`/profil/${commentaire.employeID}`}>
+                <img className="commentaire__header--image"src={commentaire.image_url} width='50' height='50'/>
+                <p className="commentaire__header--nom">{commentaire.firstname} {commentaire.lastname}</p>
                 </NavLink>
                 {commentaire.employeID === decoded.employesId || decoded.admin ?
                     <>
@@ -32,16 +32,15 @@ function Commentaires ({id, post, getPost}) {
                         <UpdatePublication data={commentaire} setUpdateId={setUpdateId} getPost={getPost}/>
                     :
                         <>
-                        <p>{commentaire.texte}</p>
+                        <p className="commentaire__texte">{commentaire.texte}</p>
+                        <button className="button__2" onClick={() => setUpdateId(commentaire.id)}>Modifier</button>
                         <DeleteCommentaire id={commentaire.id} employeID={commentaire.employeID} getPost={getPost}/>
-                        <button onClick={() => setUpdateId(commentaire.id)}>Modifier</button>
                         </>
                     }
                     </>
                 :
                     <>
-                    <p>{commentaire.texte}</p>
-                    <h4>Pas ma publication</h4>
+                    <p className="commentaire__texte">{commentaire.texte}</p>
                     </>
                 }
                 </div>
@@ -69,11 +68,11 @@ const PostCommentaire = ({id, getPost}) => {
     }
 
     return (
-        <>
+        <div className="commentaire__post">
         Texte:
-        <input type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>
-        <button type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>
-        </>
+        <textarea className="commentaire__post--textarea" type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>
+        <button className="button__1"  type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>
+        </div>
     )
 }
 
@@ -87,7 +86,7 @@ const DeleteCommentaire = ({id, employeID, getPost}) => {
     if(employeID === decoded.employesId || decoded.admin) {
        return (
         <>
-        <button type="submit" value="Supprimer" onClick={HandleClick}> Supprimer</button>
+        <button className="button__2" type="submit" value="Supprimer" onClick={HandleClick}> Supprimer</button>
         </>
     ) 
     } else {

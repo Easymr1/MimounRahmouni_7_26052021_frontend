@@ -31,7 +31,7 @@ const Signup = (props) => {
         Mot de passe:
         <input className='signup__form--label__input' type="text" {...register("password")} />
       </label>
-      <input className='signup__form--button' type="submit" value="Envoyer"/>
+      <input className='button__1' type="submit" value="Envoyer"/>
     </form>
         </div>
     )

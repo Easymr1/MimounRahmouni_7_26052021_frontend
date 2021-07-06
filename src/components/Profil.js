@@ -26,27 +26,31 @@ function Profil (props) {
     }, [refresh, props.match.params.id])
 
     return (
-        <>
-        <img src={profile.image_url} height='200'/>
-        <h2>{profile.firstname} {profile.lastname}</h2>
+        <section className="profil">
+        <article className="profil__cart">
+        <img className="profil__cart--image" src={profile.image_url}/>
+        <h2 className="profil__cart--nom">{profile.firstname} {profile.lastname}</h2>
         {(decoded.employesId == id || decoded.admin) && 
         <>
             {update ? 
                 <>
-                <UpdateProfile id={id} setRefresh={setRefresh} profile={profile}/>
-                <button type="button" onClick={() => setUpdate(false)}>Annuler</button>
+                <UpdateProfile id={id} setRefresh={setRefresh} profile={profile} setUpdate={setUpdate} />
                 </>
             :
-                <button type="button" onClick={() => setUpdate(true)}>Modifier</button>  
+            <div className="profil__button">
+                <button className="button__1" type="button" onClick={() => setUpdate(true)}>Modifier</button> 
+                 <DeleteProfile id={id} />
+            </div>
             }
-            <DeleteProfile id={id} />
+            
         </>
         } 
-    </>
+    </article>
+    </section>
     );
 }
 
-const UpdateProfile = ({id, setRefresh, profile}) => {
+const UpdateProfile = ({id, setRefresh, profile, setUpdate}) => {
     const [firstname, setFirstname] = useState(profile.firstname);
     const [lastname, setLastname] = useState(profile.lastname);
     const [image, setImage] = useState(profile.image_url);
@@ -67,11 +71,11 @@ const UpdateProfile = ({id, setRefresh, profile}) => {
 
     return (
         <>
-        <form>
-        <label htmlFor="firstname">First name:</label>
-        <input type="text" name="firstname" value={firstname} onChange={e => setFirstname(e.target.value)}/>
-        <label htmlFor="lastname">Last name:</label>
-        <input type="text" name="lastname" value={lastname} onChange={e => setLastname(e.target.value)}/>
+        <form className="profil__form">
+        <label htmlFor="firstname">Prénom:</label>
+        <input className="profil__form--input" type="text" name="firstname" value={firstname} onChange={e => setFirstname(e.target.value)}/>
+        <label htmlFor="lastname">Nom:</label>
+        <input className="profil__form--input" type="text" name="lastname" value={lastname} onChange={e => setLastname(e.target.value)}/>
         <label htmlFor="image">Image:</label>
         <input type='file' name="image" accept='.jpg,.png,.gif' onChange={e => setImage(e.target.files[0])}/>
         {decoded.admin === 1 && 
@@ -81,7 +85,10 @@ const UpdateProfile = ({id, setRefresh, profile}) => {
         </>
         }
         </form>
-        <button type="submit" onClick={HandleClick}>Envoyer</button>
+        <div className="profil__button">
+        <button className="button__1" type="submit" onClick={HandleClick}>Envoyer</button>
+        <button className="button__1" type="button" onClick={() => setUpdate(false)}>Annuler</button>
+        </div>
         </>
     )
 }
@@ -106,13 +113,13 @@ const DeleteProfile = ({id}) => {
 
     return (
         <>
-        <button onClick={PopUp}>Supprimer</button>
+        <button className="button__1" onClick={PopUp}>Supprimer</button>
         {isOpen && <PopupDelete
       content={<>
         <b>Vous êtes sur le point de supprimer votre compte Groupomania.</b>
         <p>Êtes-vous sûr de vouloir faire ce choix ? Aucun retour en arrière ne sera possible après cette action. Votre profil sera supprimé définitivement ainsi que toutes les informations que ce dernier contenait.</p>
-        <button onClick={HandleClick}>Je vous quitte</button>
-        <button onClick={PopUp}>Non je reste</button>
+        <button className="button__1" onClick={HandleClick}>Je vous quitte</button>
+        <button className="button__1" onClick={PopUp}>Non je reste</button>
       </>}
       handleClose={PopUp}
     />}

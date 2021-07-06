@@ -3,9 +3,9 @@ import Home from './Home';
 import Login from './Login';
 import Signup from './Signup';
 import Profil from './Profil';
-import {useEffect, useState} from 'react'
 import '../sass/app.css';
-import {BrowserRouter as Router, Switch, Route, Redirect} from 'react-router-dom';
+import {BrowserRouter as Switch, Route, Redirect} from 'react-router-dom';
+
 
 const token = localStorage.getItem('token');
 function App(props) {

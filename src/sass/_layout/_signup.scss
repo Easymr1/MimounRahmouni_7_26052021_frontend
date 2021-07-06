@@ -24,17 +24,5 @@
                 box-shadow: 0 0 0.5rem #b8b8b8;
             }
         }
-        &--button {
-            border-radius: 1rem;
-            height: 2rem;
-            border: none;
-            box-shadow: 0 0 0.5rem #b8b8b8;
-            background-color: $color_primary;
-            color: white;
-            &:hover {
-                -ebbackground-color: white;
-                color: $color_primary;
-            }
-        }
     }
 }
