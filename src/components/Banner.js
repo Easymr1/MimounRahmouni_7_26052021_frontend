@@ -1,4 +1,5 @@
-import logo from '../assets/icon-left-font-monochrome-white.png';
+import logoDesktop from '../assets/icon-left-font-monochrome-white.png';
+import logoMobile from '../assets/icon-left-font-monochrome-white-phone.png'
 import {Link, Redirect} from 'react-router-dom';
 import {useState, useEffect} from 'react';
 import {NavLink} from 'react-router-dom';
@@ -25,8 +26,8 @@ const Banner = (props) => {
     if(refresh) {
         statutLog = (
             <ul className='banner_nav'>
-                <NavLink className='banner_nav-li' exact to={`/`}>Home</NavLink>
-                <NavLink className='banner_nav-li' exact to={`/profil/${decoded.employesId}`}>Profil</NavLink>
+                <li className='banner_nav-li'><NavLink exact to={`/`}>Home</NavLink></li>
+                <li className='banner_nav-li'><NavLink exact to={`/profil/${decoded.employesId}`}>Profil</NavLink></li>
                 <li className='banner_nav-li' onClick={HandleClick}>Déconnexion</li>
             </ul>
 )
@@ -46,7 +47,10 @@ const Banner = (props) => {
     
         return (
             <header className='banner'>
-            <img className="banner_logo" src={logo} alt='Logo groupomania'/>
+            <div>
+                <img className="banner_logoDesktop" src={logoDesktop} alt='Logo groupomania'/>
+                <img className="banner_logoMobile" src={logoMobile} alt='Logo groupomania'/>
+            </div>
             <nav>
                 {statutLog}
             </nav>

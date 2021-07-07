@@ -15,9 +15,13 @@
   margin-bottom: 100px;
 }
 
-.banner_logo {
+.banner_logoDesktop {
   height: 15rem;
   margin-left: 2rem;
+}
+
+.banner_logoMobile {
+  display: none;
 }
 
 .banner_nav {
@@ -33,6 +37,22 @@
 .banner_nav-li {
   list-style: none;
   color: white;
+}
+
+.banner_nav-li a {
+  list-style: none;
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .banner_logoDesktop {
+    display: none;
+  }
+  .banner_logoMobile {
+    display: initial;
+    height: 2.4rem;
+    margin-left: 2rem;
+  }
 }
 
 .section {

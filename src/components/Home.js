@@ -111,7 +111,7 @@ const PostPublication = ({post, getPost}) => {
         Titre:
         <input className="postPublication__form--titre" type='texte' value={titre} onChange={e => setTitre(e.target.value)}/>
         {imageOption && <input className="postPublication__form--image" type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.files[0])}/>}
-        {texteOption && <textarea className="postPublication__form--texte" rows="4" cols="50" type='texte' placeholder='salut' value={texte} onChange={e => setTexte(e.target.value)}/>}
+        {texteOption && <textarea className="postPublication__form--texte" type='texte' placeholder='salut' value={texte} onChange={e => setTexte(e.target.value)}/>}
         </form>
         <div className="postPublication__button">
         <button className="postPublication__button--image" type="button" value="image" onClick={() => {setImageOption(true); setTexteOption(false)}}>Ajouter Image</button>

@@ -8,9 +8,12 @@
     opacity: 80%;
     margin-bottom: 100px;
     
-    &_logo {
+    &_logoDesktop {
         height: 15rem;
         margin-left: 2rem;
+    }
+    &_logoMobile {
+        display: none;
     }
     &_nav {
         text-decoration: none;
@@ -20,7 +23,23 @@
         &-li{
             list-style: none;
             color: white;
-           
+           & a {
+            list-style: none;
+            color: white;
+           }
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .banner {
+        &_logoDesktop {
+            display: none;
+        }
+        &_logoMobile {
+            display: initial;
+            height: 2.4rem;
+            margin-left: 2rem;
         }
     }
 }
