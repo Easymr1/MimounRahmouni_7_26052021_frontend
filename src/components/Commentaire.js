@@ -10,7 +10,11 @@ function Commentaires ({id, post, getPost}) {
     const [updateId, setUpdateId] = useState();
     
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/commentaire/${id}`)
+        axios.get(`http://localhost:3001/api/commentaire/${id}`, {
+        headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        })
         .then(res => {
             setGetCommentaires(res.data.results)
             getPost()
@@ -58,11 +62,15 @@ const PostCommentaire = ({id, getPost}) => {
         texte: texte,
         employeID: decoded.employesId,
         publicationID: id,
-
     }
+    console.log(commentaire)
 
     const HandleClick = () => {
-        axios.post(`http://localhost:3001/api/commentaire`, commentaire)
+        axios.post(`http://localhost:3001/api/commentaire`, commentaire, {
+        headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        })
         .then(res => getPost(res.data.result.insertId))
         .catch()
     }
@@ -78,7 +86,11 @@ const PostCommentaire = ({id, getPost}) => {
 
 const DeleteCommentaire = ({id, employeID, getPost}) => {
     const HandleClick = () => {
-        axios.delete(`http://localhost:3001/api/commentaire/${id}`)
+        axios.delete(`http://localhost:3001/api/commentaire/${id}`, {
+        headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        })
         .then(res => getPost(res.data.results.insertId))
         .catch(err => console.log(err))
     }
@@ -102,7 +114,11 @@ const UpdatePublication = ({data, getPost, setUpdateId}) => {
 
 
     const HandleClick = () => {
-        axios.put(`http://localhost:3001/api/commentaire/${data.id}`, {texte})
+        axios.put(`http://localhost:3001/api/commentaire/${data.id}`, {texte}, {
+        headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        })
         .then(res => {
             getPost(res.data.results.insertId);
             setUpdateId(res.data.results.insertId);
@@ -114,10 +130,11 @@ const UpdatePublication = ({data, getPost, setUpdateId}) => {
     
      return (  
          <>
-        Texte:
-        <input type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>
-        <button type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>
-        <button type="submit" value="Annuler" onClick={() => setUpdateId(0)}>Annuler</button>
+            <textarea className='commentaire__update' type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>
+            <div>
+                <button className="button__2" type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>
+                <button className="button__2" type="submit" value="Annuler" onClick={() => setUpdateId(0)}>Annuler</button>
+            </div>
         </>
         )
 }

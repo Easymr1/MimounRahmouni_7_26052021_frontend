@@ -49,13 +49,16 @@ const Publications = ({}) => {
                 {publication.id === updateId ?
                 <>
                     <UpdatePublication dataImage={publication} getPost={getPost} setUpdateId={setUpdateId}/>
-                    <button className="publication__header--modifier" type="submit" value="modifier" onClick={() => setUpdateId(0)}>Annuler</button>
                 </>
                 :
                 <>
-                    <h3 className="publication__header--titre">{publication.titre}</h3>
-                    <p className="publication__header--texte">{publication.texte}</p>
-                    <img className="publication__header--imagePublication" src={publication.image} width="300"/>
+                    <h3 className="publication__titre">{publication.titre}</h3>
+                    {publication.texte && <p className="publication__texte">{publication.texte}</p>}
+                    {
+                    publication.image && <div className="publication__boxImage">
+                    <img className="publication__boxImage--imagePublication" src={publication.image}/>
+                    </div>
+                    }
                     <div>
                     <button className="button__1" type="submit" value="modifier" onClick={() => setUpdateId(publication.id)}>Modifier</button>
                     <DeletePublication id={ publication.id} employeID={publication.employeID} getPost={getPost}/>
@@ -65,9 +68,11 @@ const Publications = ({}) => {
             </>
             :
             <>
-                    <h3 className="publication__header--titre">{publication.titre}</h3>
-                    <p className="publication__header--texte">{publication.texte}</p>
-                    <img className="publication__header--imagePublication" src={publication.image} width='300'/>
+                    <h3 className="publication__titre">{publication.titre}</h3>
+                    <p className="publication__texte">{publication.texte}</p>
+                    <div className="publication__boxImage">
+                    <img className="publication__boxImage--imagePublication" src={publication.image}/>
+                    </div>
             </>
            }
            <Commentaires id={ publication.id} post={post} getPost={getPost}/>
@@ -184,14 +189,14 @@ const UpdatePublication = ({dataImage, getPost, setUpdateId}) => {
      return (  
          <div className='updatePublication'>
          <form className='updatePublication__form'>
-        Titre:
         <input className='updatePublication__form--titre' type='texte' value={titre} onChange={e => setTitre(e.target.value)}/>
-        Texte:
-        <textarea className='updatePublication__form--texte' rows="4" cols="50" type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>
-
-        <input className='updatePublication__form--image' type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.files[0])}/>
+        {dataImage.texte && <textarea className='updatePublication__form--texte' type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>}
+        {dataImage.image && <input className='updatePublication__form--image' type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.files[0])}/>}
         </form>
-        <button className='updatePublication__form--boutton' type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>
+        <div>
+        <button className='button__2' type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>
+        <button className="button__2" type="submit" value="modifier" onClick={() => setUpdateId(0)}>Annuler</button>
+        </div>
         </div>
         )
 }

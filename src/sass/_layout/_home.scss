@@ -31,7 +31,7 @@
 
                 border: none;
                 box-shadow: 0 0 0.5rem #b8b8b8;
-        }   
+        }  
     }
 }
 
@@ -59,12 +59,46 @@
             font-size: 1.2rem;
             font-weight: bold;
             margin-left: 1rem;
-        }
-        &--titre {
-            font-size: 2rem;
+        } 
+    }
+    &--titre {
+            font-size: 1.5rem;
+            margin-bottom: 0rem;
         }
         &--texte {
-            font-size: 1.5rem;
+            font-size: 1rem;
         }
+        &__boxImage {
+            text-align: center;
+
+            &--imagePublication {
+            width: 80%;
+            border-radius: 2rem;
+            }
+        }
+}
+
+.updatePublication {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    &__form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        height: 8rem;
+        margin: 1rem;
+    &--titre {
+        width: 80%;
+        border-radius: 2rem;
+        border: none;
+        box-shadow: 0 0 0.5rem #b8b8b8;
+    }
+    &--texte {
+        width: 80%;
+        border-radius: 2rem;
+        border: none;
+        box-shadow: 0 0 0.5rem #b8b8b8;
+    }
     }
 }
