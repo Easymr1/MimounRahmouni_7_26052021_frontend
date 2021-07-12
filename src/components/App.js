@@ -8,13 +8,13 @@ import {BrowserRouter as Switch, Route, Redirect} from 'react-router-dom';
 
 
 const token = localStorage.getItem('token');
-function App(props) {
-console.log(props)
+function App() {
+
   return (
     <>
-      
-        <Route component={Banner} />
+        
         <Switch>
+          <Route component={Banner} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={Signup} />
           {token ?

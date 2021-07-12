@@ -9,6 +9,8 @@ const token = localStorage.getItem("token");
 const decoded = token && jwt_decode(token);
 
 const Banner = (props) => {
+
+    
     const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
