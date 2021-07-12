@@ -40,7 +40,11 @@ function Login (props) {
                />
                {errors?.email?.type === "pattern" && <p>Adresse mail incorrect</p>}
           Mot de passe:
-            <input className='login__form--label__password' type="password" required {...register("password", {required: true})} />
+            <input className='login__form--label__password' type="password" required 
+            {...register("password", {
+              required: true,
+              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
+              })} />
           </label>
           <button className='button__1' type="submit" value="Envoyer">Envoyer</button>
           </form>
