@@ -18,7 +18,11 @@ function Profil (props) {
     const [profile, getProfile] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/employes/${id}`)
+        axios.get(`http://localhost:3001/api/employes/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        })
         .then(res => {
             getProfile(res.data[0])
             setRefresh()
@@ -58,24 +62,41 @@ const UpdateProfile = ({id, setRefresh, profile, setUpdate}) => {
 
     const HandleClick = () => {
         const data = new FormData();
-        data.append('firstname', firstname)
-        data.append('lastname', lastname)
+
+        if (firstname.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,40}$/)) {
+            data.append('firstname', firstname)
+        } else {
+            console.log('Un Carractère non pris en charge à était détecter' )
+        }
+        if(lastname.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,40}$/)) {
+           data.append('lastname', lastname) 
+        } else {
+            console.log('Un Carractère non pris en charge à était détecter' )
+        }
         data.append('image_url', image)
         data.append('admin', admin)
 
-        axios.put(`http://localhost:3001/api/employes/${id}`, data)
+        if (data.get('firstname') && data.get('lastname')) {
+            axios.put(`http://localhost:3001/api/employes/${id}`, data, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        })
         .then(res => {
             setRefresh(res.data.results.changedRows)
         })
+        .catch(err => console.log(err))
+        }
+        
     }
 
     return (
         <>
         <form className="profil__form">
         <label htmlFor="firstname">Prénom:</label>
-        <input className="profil__form--input" type="text" name="firstname" value={firstname} onChange={e => setFirstname(e.target.value)}/>
+        <input className="profil__form--input" type="text" name="firstname" value={firstname} required onChange={e => setFirstname(e.target.value)}/>
         <label htmlFor="lastname">Nom:</label>
-        <input className="profil__form--input" type="text" name="lastname" value={lastname} onChange={e => setLastname(e.target.value)}/>
+        <input className="profil__form--input" type="text" name="lastname" value={lastname} required onChange={e => setLastname(e.target.value)}/>
         <label htmlFor="image">Image:</label>
         <input type='file' name="image" accept='.jpg,.png,.gif' onChange={e => setImage(e.target.files[0])}/>
         {decoded.admin === 1 && 

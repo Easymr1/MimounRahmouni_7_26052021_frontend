@@ -3,8 +3,6 @@ import axios from "axios";
 import Commentaires from './Commentaire'
 import jwt_decode from "jwt-decode";
 import {NavLink} from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
 
 
 const token = localStorage.getItem("token");
@@ -90,31 +88,53 @@ const PostPublication = ({post, getPost}) => {
     const [image, setImage] = useState('');
     const [texteOption, setTexteOption] = useState(true);
     const [imageOption, setImageOption] = useState(false);
-
+    const erreurTitre = undefined;
 
     const HandleClick = () => {
         const data = new FormData();
-        data.append('titre', titre)
-        data.append('texte', texte)
+        if(titre.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,80}$/)) {
+            data.append('titre', titre)
+        } else {
+            console.log('errorTitre')
+        };
+        if(texte.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/)) {
+            data.append('texte', texte)
+        } else {
+            console.log('errorTexte')
+        };
+
         data.append('image', image)
         data.append('employeID', decoded.employesId)
         
-        console.log(data);
-        axios.post('http://localhost:3001/api/publication/', data, {
+        if(
+            texte.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/)
+            &&
+            titre.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,80}$/)
+        ) {
+            axios.post('http://localhost:3001/api/publication/', data, {
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'content-type': 'application/json'
             } 
         })
-        .then(res => getPost(res.data.results.insertId))
-        .catch()
+        .then(res => {
+            getPost(res.data.results.insertId);
+            setTitre('');
+            setTexte('');
+            setImage('');
+        
+        })
+        .catch(err => console.log(err))
+        }
+        
     }
 
     return (
         <div className="postPublication">
         <form className="postPublication__form">
         Titre:
-        <input className="postPublication__form--titre" type='texte' value={titre} onChange={e => setTitre(e.target.value)}/>
+        <input className="postPublication__form--titre" type='texte' value={titre} require onChange={e => setTitre(e.target.value)}/>
+        {erreurTitre}
         {imageOption && <input className="postPublication__form--image" type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.files[0])}/>}
         {texteOption && <textarea className="postPublication__form--texte" type='texte' placeholder='salut' value={texte} onChange={e => setTexte(e.target.value)}/>}
         </form>
@@ -164,33 +184,66 @@ const UpdatePublication = ({dataImage, getPost, setUpdateId}) => {
     const [titre, setTitre] = useState(dataImage.titre);
     const [texte, setTexte] = useState(dataImage.texte);
     const [image, setImage] = useState(dataImage.image);
- 
+
+    const [errorTitre, setErrorTitre] = useState(false);
+    const [errorTexte, setErrorTexte] = useState(false);
+  
     const HandleClick = () => {
         const data = new FormData();
-        data.append('titre', titre)
-        data.append('texte', texte)
+            data.append('titre', titre)
+        if(texte.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/)) {
+            data.append('texte', texte)
+        } else {
+            console.log('errorTexte')
+        };
         data.append('image', image)
         data.append('employeID', decoded.employesId)
 
-        axios.put(`http://localhost:3001/api/publication/${dataImage.id}`, data, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            } 
-        })
-        .then(res => {
-            getPost(res.data.results.insertId);
-            setUpdateId(res.data.results.insertId);
-        })
-        .catch(err => console.error(err))
-        
-    }
+        if(
+            texte.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/)
+            &&
+            titre.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,80}$/)
+        ) {
 
+            axios.put(`http://localhost:3001/api/publication/${dataImage.id}`, data, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                } 
+            })
+            .then(res => {
+                getPost(res.data.results.insertId);
+                setUpdateId(res.data.results.insertId);
+                setTitre('');
+                setTexte('');
+                setImage('');
+            })
+            .catch(err => console.error(err))
+        }
+    }
+    let erreur;
     
      return (  
          <div className='updatePublication'>
          <form className='updatePublication__form'>
-        <input className='updatePublication__form--titre' type='texte' value={titre} onChange={e => setTitre(e.target.value)}/>
-        {dataImage.texte && <textarea className='updatePublication__form--texte' type='texte' value={texte} onChange={e => setTexte(e.target.value)}/>}
+        <input className='updatePublication__form--titre' type='texte' value={titre} onChange={e => {
+            if((e.target.value).match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,80}$/)) {
+                setErrorTitre(false)
+                setTitre(e.target.value)
+            } else {
+                setErrorTitre(true)
+            }
+            }}/>
+            {errorTitre && <p>Carractère non prise en charge</p>}
+        {dataImage.texte && <textarea className='updatePublication__form--texte' type='texte' value={texte} onChange={e => {
+             if((e.target.value).match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/)) {
+                setErrorTexte(false)
+                setTexte(e.target.value)
+            } else {
+                setErrorTexte(true)
+            }
+            
+            }}/>}
+            {errorTexte && <p>Carractère non prise en charge</p>}
         {dataImage.image && <input className='updatePublication__form--image' type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.files[0])}/>}
         </form>
         <div>
