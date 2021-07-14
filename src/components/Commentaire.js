@@ -4,15 +4,18 @@ import axios from "axios";
 import jwt_decode from "jwt-decode";
 import {NavLink} from 'react-router-dom';
 import { text } from '@fortawesome/fontawesome-svg-core';
+
 const token = localStorage.getItem("token");
 const decoded = token && jwt_decode(token);
 
 function Commentaires ({id, post, getPost}) { 
     const [getCommentaires, setGetCommentaires] = useState([]);
     const [updateId, setUpdateId] = useState();
-    
+    const [idOneComm, setIdOneComm] = useState();
+    const idCommentaire = idOneComm ? idOneComm : id ;
+
     useEffect(() => {
-        axios.get(`http://localhost:3001/api/commentaire/${id}`, {
+        axios.get(`http://localhost:3001/api/commentaire/${idCommentaire}`, {
         headers: {
                 'Authorization': `Bearer ${token}`,
             }
@@ -20,9 +23,10 @@ function Commentaires ({id, post, getPost}) {
         .then(res => {
             setGetCommentaires(res.data.results)
             getPost()
+            setIdOneComm()
         })
         .catch(err => console.error(err))
-    }, [post])
+    }, [post, updateId, idOneComm])
     
     return (
         <>
@@ -35,12 +39,12 @@ function Commentaires ({id, post, getPost}) {
                 {commentaire.employeID === decoded.employesId || decoded.admin ?
                     <>
                     {updateId === commentaire.id ? 
-                        <UpdatePublication data={commentaire} setUpdateId={setUpdateId} getPost={getPost}/>
+                        <UpdatePublication data={commentaire} setUpdateId={setUpdateId} setIdOneComm={setIdOneComm}/>
                     :
                         <>
                         <p className="commentaire__texte">{commentaire.texte}</p>
                         <button className="button__2" onClick={() => setUpdateId(commentaire.id)}>Modifier</button>
-                        <DeleteCommentaire id={commentaire.id} employeID={commentaire.employeID} getPost={getPost}/>
+                        <DeleteCommentaire id={commentaire.id} employeID={commentaire.employeID} getPost={getPost} setIdOneComm={setIdOneComm}/>
                         </>
                     }
                     </>
@@ -51,13 +55,13 @@ function Commentaires ({id, post, getPost}) {
                 }
                 </div>
             )}
-            <PostCommentaire id={id} getPost={getPost}/>
+            <PostCommentaire id={id} getPost={getPost} setIdOneComm={setIdOneComm}/>
             
         </>
     )
 };
 
-const PostCommentaire = ({id, getPost}) => {
+const PostCommentaire = ({id, setIdOneComm}) => {
         const {register, handleSubmit,  formState: {errors}} = useForm();
 
         const HandleClick = (commentaire) => {
@@ -74,7 +78,7 @@ const PostCommentaire = ({id, getPost}) => {
             }
         })
         .then(res => {
-            getPost(res.data.result.insertId);
+            setIdOneComm(id);
 
         })
         .catch(err => console.log(err))
@@ -89,20 +93,20 @@ const PostCommentaire = ({id, getPost}) => {
              pattern: /^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/
              })}
         />
-        {errors?.texte?.type === "pattern" && <p>Vous avez utiliser des carractère non autoriser</p>}
+        {errors?.texte?.type === "pattern" && <p className='alertMessage'>Vous avez utiliser des carractère non autoriser</p>}
         <button className="button__1"  type="submit" value="Envoyer">Publier</button>
         </form>
     )
 }
 
-const DeleteCommentaire = ({id, employeID, getPost}) => {
+const DeleteCommentaire = ({id, employeID, setIdOneComm}) => {
     const HandleClick = () => {
         axios.delete(`http://localhost:3001/api/commentaire/${id}`, {
         headers: {
                 'Authorization': `Bearer ${token}`,
             }
         })
-        .then(res => getPost(res.data.results.insertId))
+        .then(res => setIdOneComm(id))
         .catch(err => console.log(err))
     }
 
@@ -120,7 +124,7 @@ const DeleteCommentaire = ({id, employeID, getPost}) => {
     }
 }
 
-const UpdatePublication = ({data, getPost, setUpdateId}) => {
+const UpdatePublication = ({data, setUpdateId,setIdOneComm}) => {
     const [texte, setTexte] = useState(data.texte);
     const [error, getError] = useState(false)
 
@@ -132,7 +136,7 @@ const UpdatePublication = ({data, getPost, setUpdateId}) => {
             }
         })
         .then(res => {
-            getPost(res.data.results.insertId);
+            setIdOneComm(data.id);
             setUpdateId(res.data.results.insertId);
         })
         .catch(err => console.error(err))

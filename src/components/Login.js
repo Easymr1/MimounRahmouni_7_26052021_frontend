@@ -8,7 +8,7 @@ function Login (props) {
   const [limiter, getLimiter] = useState();
 
   const HandleClick = () => {
-    props.history.push("/");
+    window.location = "/";
   }
   function onSubmit (publier) {
     

@@ -3,6 +3,7 @@ import axios from "axios";
 import Commentaires from './Commentaire'
 import jwt_decode from "jwt-decode";
 import {NavLink} from 'react-router-dom';
+import useToken from './useToken';
 
 
 const token = localStorage.getItem("token");
@@ -10,6 +11,9 @@ const decoded = token && jwt_decode(token);
 
 
 const Publications = ({}) => {
+
+    useToken();
+
     const [publications, getPublications] = useState([]);
     const [post, getPost] = useState();
     const [updateId, setUpdateId] = useState();
@@ -59,7 +63,7 @@ const Publications = ({}) => {
                     }
                     <div>
                     <button className="button__1" type="submit" value="modifier" onClick={() => setUpdateId(publication.id)}>Modifier</button>
-                    <DeletePublication id={ publication.id} employeID={publication.employeID} getPost={getPost}/>
+                    <DeletePublication id={ publication.id} employeID={publication.employeID} setUpdateId={setUpdateId}/>
                     </div>
                 </>
                 }
@@ -88,7 +92,9 @@ const PostPublication = ({post, getPost}) => {
     const [image, setImage] = useState('');
     const [texteOption, setTexteOption] = useState(true);
     const [imageOption, setImageOption] = useState(false);
-    const erreurTitre = undefined;
+
+    const [errorTitre, setErrorTitre] = useState(false);
+    const [errorTexte, setErrorTexte] = useState(false);
 
     const HandleClick = () => {
         const data = new FormData();
@@ -133,10 +139,28 @@ const PostPublication = ({post, getPost}) => {
         <div className="postPublication">
         <form className="postPublication__form">
         Titre:
-        <input className="postPublication__form--titre" type='texte' value={titre} require onChange={e => setTitre(e.target.value)}/>
-        {erreurTitre}
-        {imageOption && <input className="postPublication__form--image" type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.files[0])}/>}
-        {texteOption && <textarea className="postPublication__form--texte" type='texte' placeholder='salut' value={texte} onChange={e => setTexte(e.target.value)}/>}
+        <input className="postPublication__form--titre" type='texte' value={titre} required onChange={e => {
+            if((e.target.value).match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,80}$/)) {
+                setErrorTitre(false)
+                setTitre(e.target.value)
+            } else {
+                setErrorTitre(true)
+            }
+            }}
+            />
+            {errorTitre && <p>Carractère non prise en charge</p>}
+        {imageOption && <input className="postPublication__form--image" type="file"  name="image" accept='.jpg,.png,.gif' onChange={e => setImage(e.target.files[0])}/>}
+        {texteOption && <textarea className="postPublication__form--texte" type='texte' placeholder='salut' value={texte} onChange={e => {
+             if((e.target.value).match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/)) {
+                setErrorTexte(false)
+                setTexte(e.target.value)
+            } else {
+                setErrorTexte(true)
+            }
+            
+            }}
+            />}
+            {errorTexte && <p>Carractère non prise en charge</p>}
         </form>
         <div className="postPublication__button">
         <button className="postPublication__button--image" type="button" value="image" onClick={() => {setImageOption(true); setTexteOption(false)}}>Ajouter Image</button>
@@ -147,7 +171,7 @@ const PostPublication = ({post, getPost}) => {
     )
 }
 
-const DeletePublication = ({id, employeID, getPost, setUpdateId}) => {
+const DeletePublication = ({id, employeID, setUpdateId}) => {
 
     const HandleClick = () => {
         
@@ -160,7 +184,7 @@ const DeletePublication = ({id, employeID, getPost, setUpdateId}) => {
             } 
         })
         .then(res => {
-            getPost(res.data.results.insertId);
+            setUpdateId(res.data.results.insertId);
         })
         .catch(err => console.error(err));
         
@@ -190,37 +214,25 @@ const UpdatePublication = ({dataImage, getPost, setUpdateId}) => {
   
     const HandleClick = () => {
         const data = new FormData();
-            data.append('titre', titre)
-        if(texte.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/)) {
-            data.append('texte', texte)
-        } else {
-            console.log('errorTexte')
-        };
+        data.append('titre', titre)
+        data.append('texte', texte)
         data.append('image', image)
         data.append('employeID', decoded.employesId)
 
-        if(
-            texte.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/)
-            &&
-            titre.match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,80}$/)
-        ) {
-
-            axios.put(`http://localhost:3001/api/publication/${dataImage.id}`, data, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                } 
-            })
-            .then(res => {
-                getPost(res.data.results.insertId);
-                setUpdateId(res.data.results.insertId);
-                setTitre('');
-                setTexte('');
-                setImage('');
-            })
-            .catch(err => console.error(err))
-        }
-    }
-    let erreur;
+        axios.put(`http://localhost:3001/api/publication/${dataImage.id}`, data, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            } 
+                })
+        .then(res => {
+            getPost(res.data.results.insertId);
+            setUpdateId(res.data.results.insertId);
+            setTitre('');
+            setTexte('');
+            setImage('');
+        })
+        .catch(err => console.error(err))
+    };
     
      return (  
          <div className='updatePublication'>
@@ -244,7 +256,7 @@ const UpdatePublication = ({dataImage, getPost, setUpdateId}) => {
             
             }}/>}
             {errorTexte && <p>Carractère non prise en charge</p>}
-        {dataImage.image && <input className='updatePublication__form--image' type="file"  name="image" accept='.jpg,.png.gif' onChange={e => setImage(e.target.files[0])}/>}
+        {dataImage.image && <input className='updatePublication__form--image' type="file"  name="image" accept='.jpg,.png,.gif' onChange={e => setImage(e.target.files[0])}/>}
         </form>
         <div>
         <button className='button__2' type="submit" value="Envoyer" onClick={HandleClick}>Publier</button>

@@ -20,7 +20,7 @@ const Banner = (props) => {
     const HandleClick = () => {
         localStorage.clear();
         setRefresh(true)
-        props.history.push("/login");
+        window.location="/login";
     }
 
     let statutLog; 
