@@ -33,7 +33,7 @@ function Commentaires ({id, post, getPost}) {
             {getCommentaires.map(commentaire => 
                 <div className="commentaire" key={commentaire.id}>
                 <NavLink className="publication__header" exact to={`/profil/${commentaire.employeID}`}>
-                <img className="commentaire__header--image"src={commentaire.image_url} width='50' height='50'/>
+                <img className="commentaire__header--image"src={commentaire.image_url} alt={`Photo de profil de ${commentaire.firstname} ${commentaire.lastname}`} width='50' height='50'/>
                 <p className="commentaire__header--nom">{commentaire.firstname} {commentaire.lastname}</p>
                 </NavLink>
                 {commentaire.employeID === decoded.employesId || decoded.admin ?
@@ -86,8 +86,8 @@ const PostCommentaire = ({id, setIdOneComm}) => {
 
     return (
         <form className="commentaire__post" onSubmit={handleSubmit(HandleClick)}>
-        <label className='commentaire__post--label'>Commentaire</label>
-        <textarea className="commentaire__post--textarea" type='texte'  required 
+        <label className='commentaire__post--label' htmlFor={`commentaireTexte numero ${id}`}>Commentaire</label>
+        <textarea className="commentaire__post--textarea" id={`commentaireTexte numero ${id}`} type='texte'  required 
         {...register("texte", {
             required: true,
              pattern: /^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/

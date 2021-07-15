@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import axios from "axios";
 import {useState} from "react";
 
 const Signup = (props) => {
@@ -6,20 +7,20 @@ const Signup = (props) => {
     const [limiter, getLimiter] = useState();
     
       function onSubmit (signup) {
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(signup)
-      };
-      fetch('http://localhost:3001/api/employes/signup', requestOptions)
+
+        const HandleClick = () => {
+          window.location = "/";
+        }
+    
+      axios.post('http://localhost:3001/api/employes/signup', signup)
           .then(res => {
-            res.json()
-            console.log(res)
-            getLimiter(res.status)
+            console.log(res.data)
+            localStorage.setItem('token', res.data.token);
+            getLimiter(res.status);
+            HandleClick();
           })
           .catch(err => {
-            console.log('hello')
-            getLimiter(err.response.status)
+            getLimiter(err.response.status);
           })
           }
 

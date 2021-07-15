@@ -32,8 +32,8 @@ function Profil (props) {
     return (
         <section className="profil">
         <article className="profil__cart">
-        <img className="profil__cart--image" src={profile.image_url}/>
-        <h2 className="profil__cart--nom">{profile.firstname} {profile.lastname}</h2>
+        <img className="profil__cart--image" src={profile.image_url} alt={`Photo de profil de ${profile.firstname} ${profile.lastname}`}/>
+        <h1 className="profil__cart--nom">{profile.firstname} {profile.lastname}</h1>
         {(decoded.employesId == id || decoded.admin) && 
         <>
             {update ? 

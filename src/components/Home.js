@@ -43,8 +43,8 @@ const Publications = ({}) => {
            {publications.map( publication => 
            <article key={ publication.id} className="publication">
                <NavLink className="publication__header" exact to={`/profil/${publication.employeID}`}>
-                <img className="publication__header--image" src={publication.image_url}/>
-                <p className="publication__header--nom">{publication.firstname} {publication.lastname}</p>
+                <img className="publication__header--image" src={publication.image_url} alt={`Photo de profil de ${publication.firstname} ${publication.lastname}`}/>
+                <h2 className="publication__header--nom">{publication.firstname} {publication.lastname}</h2>
                 </NavLink>
            {publication.employeID === decoded.employesId ||  decoded.admin ?
             <>
@@ -58,7 +58,7 @@ const Publications = ({}) => {
                     {publication.texte && <p className="publication__texte">{publication.texte}</p>}
                     {
                     publication.image && <div className="publication__boxImage">
-                    <img className="publication__boxImage--imagePublication" src={publication.image}/>
+                    <img className="publication__boxImage--imagePublication" src={publication.image} alt={publication.titre}/>
                     </div>
                     }
                     <div>
@@ -73,7 +73,7 @@ const Publications = ({}) => {
                     <h3 className="publication__titre">{publication.titre}</h3>
                     <p className="publication__texte">{publication.texte}</p>
                     <div className="publication__boxImage">
-                    <img className="publication__boxImage--imagePublication" src={publication.image}/>
+                    <img className="publication__boxImage--imagePublication" src={publication.image} alt={publication.titre}/>
                     </div>
             </>
            }
@@ -138,8 +138,8 @@ const PostPublication = ({post, getPost}) => {
     return (
         <div className="postPublication">
         <form className="postPublication__form">
-        Titre:
-        <input className="postPublication__form--titre" type='texte' value={titre} required onChange={e => {
+        <label htmlFor="publicationTitre">Titre:</label>
+        <input className="postPublication__form--titre" id="publicationTitre" type='texte' value={titre} required onChange={e => {
             if((e.target.value).match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,80}$/)) {
                 setErrorTitre(false)
                 setTitre(e.target.value)
@@ -149,8 +149,16 @@ const PostPublication = ({post, getPost}) => {
             }}
             />
             {errorTitre && <p>Carractère non prise en charge</p>}
-        {imageOption && <input className="postPublication__form--image" type="file"  name="image" accept='.jpg,.png,.gif' onChange={e => setImage(e.target.files[0])}/>}
-        {texteOption && <textarea className="postPublication__form--texte" type='texte' placeholder='salut' value={texte} onChange={e => {
+        {imageOption && 
+        <>
+        <label htmlFor="publicationImage">Image</label>
+        <input className="postPublication__form--image" id="publicationImage" type="file"  name="image" accept='.jpg,.png,.gif' onChange={e => setImage(e.target.files[0])}/>
+        </>
+        }
+        {texteOption && 
+        <>
+        <label htmlFor="publicationTexte">Texte</label>
+        <textarea className="postPublication__form--texte" id="publicationTexte" type='texte' placeholder='salut' value={texte} onChange={e => {
              if((e.target.value).match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/)) {
                 setErrorTexte(false)
                 setTexte(e.target.value)
@@ -159,7 +167,9 @@ const PostPublication = ({post, getPost}) => {
             }
             
             }}
-            />}
+            />
+           </> 
+            }
             {errorTexte && <p>Carractère non prise en charge</p>}
         </form>
         <div className="postPublication__button">
