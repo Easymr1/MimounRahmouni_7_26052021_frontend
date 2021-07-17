@@ -71,10 +71,12 @@ const Publications = ({}) => {
             :
             <>
                     <h3 className="publication__titre">{publication.titre}</h3>
-                    <p className="publication__texte">{publication.texte}</p>
-                    <div className="publication__boxImage">
+                    {publication.texte && <p className="publication__texte">{publication.texte}</p>}
+                    {
+                    publication.image && <div className="publication__boxImage">
                     <img className="publication__boxImage--imagePublication" src={publication.image} alt={publication.titre}/>
                     </div>
+                    }
             </>
            }
            <Commentaires id={ publication.id} post={post} getPost={getPost}/>
