@@ -2,13 +2,12 @@ import {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import {Redirect} from 'react-router-dom';
+import profilImage from '../assets/icon.png'
 
 const token = localStorage.getItem("token");
 const decoded = token && jwt_decode(token);
 
 function Profil (props) {
-    console.log(props)
     const {id} = useParams();
 
     const [refresh, setRefresh] = useState();
@@ -32,7 +31,11 @@ function Profil (props) {
     return (
         <section className="profil">
         <article className="profil__cart">
-        <img className="profil__cart--image" src={profile.image_url} alt={`Photo de profil de ${profile.firstname} ${profile.lastname}`}/>
+        {!(profile.image_url == null) ? 
+                <img className="profil__cart--image" src={profile.image_url} alt={`Photo de profil de de ${profile.firstname} ${profile.lastname}`}/>
+                :
+                <img className="profil__cart--image" src={profilImage} alt={`Photo de profil par défaut`}/>
+                }
         <h1 className="profil__cart--nom">{profile.firstname} {profile.lastname}</h1>
         {(decoded.employesId == id || decoded.admin) && 
         <>
@@ -121,15 +124,13 @@ const DeleteProfile = ({id}) => {
         setIsOpen(!isOpen)
     }
 
-    const HandleClick = () => {
-        
-        <Redirect to="/login"/>
-    // axios.delete(`http://localhost:3001/api/employes/${id}`, )
-    //         .then(res => {
-    //             console.log(res)
-    //           localStorage.clear()
-    //         })
-
+    const HandleClick = () => {   
+    axios.delete(`http://localhost:3001/api/employes/${id}`, )
+            .then(res => {
+              localStorage.clear()
+              window.location="/login";
+            })
+            .catch(err => console.log(err))
     }
 
     return (

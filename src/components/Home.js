@@ -4,6 +4,7 @@ import Commentaires from './Commentaire'
 import jwt_decode from "jwt-decode";
 import {NavLink} from 'react-router-dom';
 import useToken from './useToken';
+import profilImage from '../assets/icon.png'
 
 
 const token = localStorage.getItem("token");
@@ -43,7 +44,11 @@ const Publications = ({}) => {
            {publications.map( publication => 
            <article key={ publication.id} className="publication">
                <NavLink className="publication__header" exact to={`/profil/${publication.employeID}`}>
-                <img className="publication__header--image" src={publication.image_url} alt={`Photo de profil de ${publication.firstname} ${publication.lastname}`}/>
+                {!(publication.image_url == null) ? 
+                <img className="publication__header--image" src={publication.image_url} alt={`Photo de profil de de ${publication.firstname} ${publication.lastname}`}/>
+                :
+                <img className="publication__header--image" src={profilImage} alt={`Photo de profil par défaut`}/>
+                }
                 <h2 className="publication__header--nom">{publication.firstname} {publication.lastname}</h2>
                 </NavLink>
            {publication.employeID === decoded.employesId ||  decoded.admin ?
@@ -88,7 +93,7 @@ const Publications = ({}) => {
 
 }
 
-const PostPublication = ({post, getPost}) => {
+const PostPublication = ({getPost}) => {
     const [titre, setTitre] = useState('');
     const [texte, setTexte] = useState('');
     const [image, setImage] = useState('');
@@ -153,14 +158,14 @@ const PostPublication = ({post, getPost}) => {
             {errorTitre && <p>Carractère non prise en charge</p>}
         {imageOption && 
         <>
-        <label htmlFor="publicationImage">Image</label>
+        <label htmlFor="publicationImage">Image:</label>
         <input className="postPublication__form--image" id="publicationImage" type="file"  name="image" accept='.jpg,.png,.gif' onChange={e => setImage(e.target.files[0])}/>
         </>
         }
         {texteOption && 
         <>
-        <label htmlFor="publicationTexte">Texte</label>
-        <textarea className="postPublication__form--texte" id="publicationTexte" type='texte' placeholder='salut' value={texte} onChange={e => {
+        <label htmlFor="publicationTexte">Texte:</label>
+        <textarea className="postPublication__form--texte" id="publicationTexte" type='texte' value={texte} onChange={e => {
              if((e.target.value).match(/^[a-zA-Z0-9àáâäèéêëîïùúüç ,.'@!?-]{0,400}$/)) {
                 setErrorTexte(false)
                 setTexte(e.target.value)
@@ -188,15 +193,12 @@ const DeletePublication = ({id, employeID, setUpdateId}) => {
     const HandleClick = () => {
         
         axios.delete(`http://localhost:3001/api/publication/${id}`, {
-            data:{
-                employeID: decoded.employesId,
-            },
             headers: {
                 'Authorization': `Bearer ${token}`,
             } 
         })
         .then(res => {
-            setUpdateId(res.data.results.insertId);
+            setUpdateId(Math.random());
         })
         .catch(err => console.error(err));
         

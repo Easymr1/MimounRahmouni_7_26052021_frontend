@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import {NavLink} from 'react-router-dom';
-import { text } from '@fortawesome/fontawesome-svg-core';
+import profilImage from '../assets/icon.png'
+
 
 const token = localStorage.getItem("token");
 const decoded = token && jwt_decode(token);
@@ -33,8 +34,11 @@ function Commentaires ({id, post, getPost}) {
             {getCommentaires.map(commentaire => 
                 <div className="commentaire" key={commentaire.id}>
                 <NavLink className="publication__header" exact to={`/profil/${commentaire.employeID}`}>
-                <img className="commentaire__header--image"src={commentaire.image_url} alt={`Photo de profil de ${commentaire.firstname} ${commentaire.lastname}`} width='50' height='50'/>
-                <p className="commentaire__header--nom">{commentaire.firstname} {commentaire.lastname}</p>
+                {!(commentaire.image_url == null) ? 
+                <img className="commentaire__header--image" src={commentaire.image_url} alt={`Photo de profil de de ${commentaire.firstname} ${commentaire.lastname}`}/>
+                :
+                <img className="commentaire__header--image" src={profilImage} alt={`Photo de profil par défaut`}/>
+                }                <p className="commentaire__header--nom">{commentaire.firstname} {commentaire.lastname}</p>
                 </NavLink>
                 {commentaire.employeID === decoded.employesId || decoded.admin ?
                     <>
